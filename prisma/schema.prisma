@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  displayName String
+  email       String?    @unique
+  role        String     @default("TEACHER") // TEACHER, STUDENT, ADMIN
+  createdAt   DateTime   @default(now())
+  quizSets    QuizSet[]
+  gamePlayers GamePlayer[]
+}
+
+model QuizSet {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  ownerId     String?
+  owner       User?      @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  questions   Question[]
+  gameRooms   GameRoom[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id            String         @id @default(uuid())
+  quizSetId     String
+  quizSet       QuizSet        @relation(fields: [quizSetId], references: [id], onDelete: Cascade)
+  type          String         @default("multiple_choice")
+  content       String
+  options       String         // Stored as JSON string [{"id":"A","text":"..."},{"id":"B","text":"..."}]
+  correctAnswer String         // ID of correct answer, e.g. "A"
+  explanation   String?
+  difficulty    String         @default("medium") // easy, medium, hard
+  timeLimit     Int            @default(20)       // in seconds
+  rewardType    String         @default("random_power")
+  createdAt     DateTime       @default(now())
+  answerRecords AnswerRecord[]
+}
+
+model GameRoom {
+  id            String         @id @default(uuid())
+  roomCode      String         @unique
+  hostId        String?
+  quizSetId     String?
+  quizSet       QuizSet?       @relation(fields: [quizSetId], references: [id], onDelete: SetNull)
+  status        String         @default("LOBBY") // LOBBY, PLAYING, PAUSED, ENDED
+  settings      String         // Stored as JSON string
+  createdAt     DateTime       @default(now())
+  startedAt     DateTime?
+  endedAt       DateTime?
+  players       GamePlayer[]
+  answerRecords AnswerRecord[]
+  gameEvents    GameEvent[]
+}
+
+model GamePlayer {
+  id              String         @id @default(uuid())
+  roomId          String
+  gameRoom        GameRoom       @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId          String?
+  user            User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nickname        String
+  avatar          String         @default("runner_fox")
+  status          String         @default("WAITING") // WAITING, PLAYING, FINISHED, DISCONNECTED
+  currentPosition String         @default("{\"x\":1,\"y\":1}") // JSON string
+  progress        Float          @default(0)
+  inventory       String         @default("[]") // JSON string of PowerUp[]
+  joinedAt        DateTime       @default(now())
+  finishedAt      DateTime?
+  finalRank       Int?
+  answerRecords   AnswerRecord[]
+}
+
+model AnswerRecord {
+  id              String     @id @default(uuid())
+  roomId          String
+  gameRoom        GameRoom   @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  playerId        String
+  player          GamePlayer @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  submittedAnswer String
+  isCorrect       Boolean
+  responseTime    Int        // in milliseconds
+  createdAt       DateTime   @default(now())
+}
+
+model GameEvent {
+  id        String   @id @default(uuid())
+  roomId    String
+  gameRoom  GameRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  playerId  String?
+  eventType String
+  payload   String   // JSON string
+  createdAt DateTime @default(now())
+}
