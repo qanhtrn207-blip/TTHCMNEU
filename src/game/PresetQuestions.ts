@@ -1,751 +1,833 @@
 import { Question, QuizSet } from '../types/game.js';
 
+export const MR_QANH_QUESTIONS: Question[] = [
+  {
+    "id": "cmm-01",
+    "type": "multiple_choice",
+    "content": "CÂU 1: Đặc trưng cốt lõi về mặt phương thức hoạt động của \"Cách mạng màu\" là gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Sử dụng hoàn toàn sức mạnh quân sự từ bên ngoài."
+      },
+      {
+        "id": "B",
+        "text": "Lật đổ chế độ bằng đấu tranh bất bạo động."
+      },
+      {
+        "id": "C",
+        "text": "Tiến hành bạo trang vũ trang kết hợp cấm vận kinh tế."
+      },
+      {
+        "id": "D",
+        "text": "Gây sức ép ngoại giao để thay đổi các chính sách."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-02",
+    "type": "multiple_choice",
+    "content": "CÂU 2: Xét về nguyên nhân nội tại, yếu tố nào tạo điều kiện thuận lợi nhất để các thế lực thù địch châm ngòi Cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Tranh giành quyền lực, lợi ích trong nội bộ."
+      },
+      {
+        "id": "B",
+        "text": "Sự thiếu hụt trầm trọng các nguồn tài nguyên thiên nhiên."
+      },
+      {
+        "id": "C",
+        "text": "Các lệnh cấm vận kinh tế khắt khe từ phương Tây."
+      },
+      {
+        "id": "D",
+        "text": "Sự suy giảm dân số và khủng hoảng di cư diện rộng."
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-03",
+    "type": "multiple_choice",
+    "content": "CÂU 3: Lực lượng nào thường bị các đối tượng chống đối kích động, lôi kéo làm \"nòng cốt\" xuống đường trong các cuộc Cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Lực lượng vũ trang và cảnh sát."
+      },
+      {
+        "id": "B",
+        "text": "Doanh nhân và chủ tập đoàn kinh tế."
+      },
+      {
+        "id": "C",
+        "text": "Sinh viên, giới trẻ và các tổ chức xã hội dân sự."
+      },
+      {
+        "id": "D",
+        "text": "Cán bộ hưu trí và nông dân."
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-04",
+    "type": "multiple_choice",
+    "content": "CÂU 4: Theo kết luận của bài thuyết trình, nhiệm vụ ngăn chặn nguy cơ 'Cách mạng màu' thuộc về ai?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Chỉ riêng lực lượng thanh niên, sinh viên tại các thành phố lớn"
+      },
+      {
+        "id": "B",
+        "text": "Riêng các cơ quan công an và quân đội trực trách nhiệm bảo vệ an ninh"
+      },
+      {
+        "id": "C",
+        "text": "Toàn xã hội, trong đó Đảng và Nhà nước giữ vai trò định hướng"
+      },
+      {
+        "id": "D",
+        "text": "Các tổ chức quốc tế và các cơ quan ngoại giao nước ngoài tại Việt Nam"
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-05",
+    "type": "multiple_choice",
+    "content": "CÂU 5: Hậu quả thực tế chung của các cuộc cách mạng màu tại nhiều quốc gia trên thế giới là gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Khủng hoảng thể chế, suy sụp kinh tế và xung đột vũ trang"
+      },
+      {
+        "id": "B",
+        "text": "Quá trình hội nhập quốc tế diễn ra suôn sẻ và chủ quyền được củng cố"
+      },
+      {
+        "id": "C",
+        "text": "Sự đoàn kết nội bộ dân tộc được tăng cường mạnh mẽ hơn"
+      },
+      {
+        "id": "D",
+        "text": "Sự thịnh vượng kinh tế vượt bậc và nền dân chủ vững chắc"
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-06",
+    "type": "multiple_choice",
+    "content": "CÂU 6: Từ năm 1995 đến nay, chiến lược \"Diễn biến hòa bình\" đối với Việt Nam đã thay đổi phương thức như thế nào?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Chuyển sang tấn công tinh vi từ bên trong hệ thống."
+      },
+      {
+        "id": "B",
+        "text": "Sử dụng cấm vận kinh tế và bao vây ngoại giao toàn diện."
+      },
+      {
+        "id": "C",
+        "text": "Tăng cường các hoạt động can thiệp quân sự quy mô lớn."
+      },
+      {
+        "id": "D",
+        "text": "Tập trung hỗ trợ tài chính cho các dự án phát triển."
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-07",
+    "type": "multiple_choice",
+    "content": "CÂU 7: Đằng sau những khẩu hiệu bề nổi về \"dân chủ\" hay \"nhân quyền\", mục đích thực chất của các cuộc Cách mạng màu là gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Đấu tranh đòi quyền lợi kinh tế và tăng lương cơ bản cho người lao động."
+      },
+      {
+        "id": "B",
+        "text": "Yêu cầu chính phủ đương nhiệm phải tiến hành cải cách hệ thống giáo dục."
+      },
+      {
+        "id": "C",
+        "text": "Thay đổi thể chế chính trị, thiết lập các chính quyền thân phương Tây."
+      },
+      {
+        "id": "D",
+        "text": "Xóa bỏ hoàn toàn các rào cản thương mại để nhận viện trợ từ quốc tế."
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-08",
+    "type": "multiple_choice",
+    "content": "CÂU 8: Đâu là công cụ then chốt giúp những kẻ tổ chức Cách mạng màu điều phối lực lượng và tô vẽ \"chính nghĩa\"?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Sử dụng các loại vũ khí hiện đại để uy hiếp các cơ quan nhà nước."
+      },
+      {
+        "id": "B",
+        "text": "Thao túng truyền thông và mạng xã hội."
+      },
+      {
+        "id": "C",
+        "text": "Được sự đồng thuận tuyệt đối của tất cả các lực lượng vũ trang trong nước."
+      },
+      {
+        "id": "D",
+        "text": "Kêu gọi viện trợ kinh tế khẩn cấp từ Liên Hợp Quốc và Ngân hàng Thế giới."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-09",
+    "type": "multiple_choice",
+    "content": "CÂU 9: Đối với học sinh, sinh viên, yếu tố nào được xác định là nền tảng cốt lõi để tự đề kháng trước các thông tin sai lệch?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Sự nhạy bén trong việc nắm bắt xu hướng giải trí trên mạng"
+      },
+      {
+        "id": "B",
+        "text": "Năng lực chuyên môn, bản lĩnh và đạo đức chính trị"
+      },
+      {
+        "id": "C",
+        "text": "Khả năng tham gia các phong trào biểu tình phản đối xã hội"
+      },
+      {
+        "id": "D",
+        "text": "Việc từ chối học tập lý luận chính trị để giữ tính khách quan"
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-10",
+    "type": "multiple_choice",
+    "content": "CÂU 10: Cách đặt tên cho các cuộc cách mạng màu thường gắn liền với yếu tố nào nhằm dễ dàng nhận diện và tạo diện mạo ôn hòa trước công luận?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Mốc thời gian năm diễn ra sự kiện lịch sử"
+      },
+      {
+        "id": "B",
+        "text": "Tên của thành phố thủ đô nổ ra bạo loạn"
+      },
+      {
+        "id": "C",
+        "text": "Một màu sắc hay loài hoa biểu trưng"
+      },
+      {
+        "id": "D",
+        "text": "Tên của nhà lãnh đạo phe đối lập"
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-11",
+    "type": "multiple_choice",
+    "content": "CÂU 11: Theo tài liệu, trong giai đoạn 1950 - 1975, các thế lực thù địch chủ yếu sử dụng phương thức nào để chống phá cách mạng Việt Nam?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Tiến hành bao vây, cấm vận kinh tế và cô lập hoàn toàn về mặt ngoại giao."
+      },
+      {
+        "id": "B",
+        "text": "Đối đầu quân sự trực tiếp nhằm lật đổ chính quyền xã hội chủ nghĩa."
+      },
+      {
+        "id": "C",
+        "text": "Kích động bạo loạn lật đổ thông qua các nền tảng mạng xã hội và truyền thông."
+      },
+      {
+        "id": "D",
+        "text": "Viện trợ tài chính khổng lồ nhằm thao túng toàn bộ hệ thống chính trị trong nước."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-12",
+    "type": "multiple_choice",
+    "content": "CÂU 12: Cuộc cách mạng nào ở khu vực Đông Âu và Không gian hậu Xô Viết năm 2003 đã khiến Tổng thống Eduard Shevardnadze bị ép từ chức sau khi người biểu tình xông vào đập phá Quốc hội?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cách mạng Hoa Hồng (Georgia)"
+      },
+      {
+        "id": "B",
+        "text": "Cách mạng Hoa Lài (Tunisia)"
+      },
+      {
+        "id": "C",
+        "text": "Cách mạng Tulip (Kyrgyzstan)"
+      },
+      {
+        "id": "D",
+        "text": "Cách mạng Cam (Ukraine)"
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-13",
+    "type": "multiple_choice",
+    "content": "CÂU 13: Nội dung nào sau đây là quan điểm cốt lõi của Tư tưởng Hồ Chí Minh được vận dụng để xây dựng 'thế trận lòng dân' nhằm phòng ngừa cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Ưu tiên phát triển lực lượng vũ trang hiện đại lên hàng đầu"
+      },
+      {
+        "id": "B",
+        "text": "Lấy dân làm gốc, bảo đảm quyền và lợi ích chính đáng của nhân dân"
+      },
+      {
+        "id": "C",
+        "text": "Tập trung toàn bộ nguồn lực quốc gia cho hội nhập kinh tế quốc tế"
+      },
+      {
+        "id": "D",
+        "text": "Tăng cường quyền lực tuyệt đối cho các cơ quan quản lý nhà nước"
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-14",
+    "type": "multiple_choice",
+    "content": "CÂU 14: Theo Tư tưởng Hồ Chí Minh, đội ngũ cán bộ và các cơ quan Nhà nước phải đóng vai trò như thế nào đối với nhân dân?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Là 'công bộc của dân', gần dân, hiểu dân và phục vụ nhân dân"
+      },
+      {
+        "id": "B",
+        "text": "Là cơ quan quyền lực đứng trên để điều khiển và giám sát mọi hoạt động xã hội"
+      },
+      {
+        "id": "C",
+        "text": "Là lực lượng chuyên gia độc lập đưa ra quyết định không cần tham khảo dân"
+      },
+      {
+        "id": "D",
+        "text": "Là những nhà quản lý kinh tế tập trung thuần túy không quan tâm chính trị"
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-15",
+    "type": "multiple_choice",
+    "content": "CÂU 15: Phương pháp học tập lịch sử và lý luận chính trị nào được khuyến nghị cho học sinh, sinh viên để tránh bị lừa phỉnh bởi luận điệu xuyên tạc?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Học thuộc lòng các mốc thời gian sự kiện ghi trong sách giáo khoa đối phó thi cử"
+      },
+      {
+        "id": "B",
+        "text": "Chỉ tìm kiếm thông tin đánh giá về lịch sử trên các mạng xã hội nước ngoài"
+      },
+      {
+        "id": "C",
+        "text": "Học tập chủ động, đọc giáo trình kết hợp tài liệu mở rộng và đặt sự kiện vào bối cảnh lịch sử"
+      },
+      {
+        "id": "D",
+        "text": "Miễn dịch với mọi tranh luận lịch sử và chỉ tập trung vào chuyên ngành kỹ thuật"
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-16",
+    "type": "multiple_choice",
+    "content": "CÂU 16: Sự kiện Cách mạng Hoa Hồng tại Georgia (2003) bắt nguồn từ việc lực lượng đối lập cáo buộc điều gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Gian lận trong bầu cử Quốc hội."
+      },
+      {
+        "id": "B",
+        "text": "Tham gia liên minh quân sự với các nước láng giềng."
+      },
+      {
+        "id": "C",
+        "text": "Phá hoại hệ thống môi trường biển và sinh kế của người dân."
+      },
+      {
+        "id": "D",
+        "text": "Cắt giảm ngân sách phúc lợi xã hội và giáo dục."
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-17",
+    "type": "multiple_choice",
+    "content": "CÂU 17: Tư tưởng \"Đại đoàn kết toàn dân tộc\" của Hồ Chí Minh có tác dụng trực tiếp nào trong việc làm thất bại âm mưu Cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Triệt tiêu hoàn toàn sự khác biệt về giai cấp và lợi ích kinh tế trong xã hội."
+      },
+      {
+        "id": "B",
+        "text": "Tăng cường sự gắn kết, thu hẹp khoảng cách phân cực và chia rẽ xã hội."
+      },
+      {
+        "id": "C",
+        "text": "Hạn chế tối đa việc giao lưu, hợp tác văn hóa với các quốc gia phương Tây."
+      },
+      {
+        "id": "D",
+        "text": "Thay thế hoàn toàn hệ thống pháp luật bằng các quy ước đạo đức truyền thống."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-18",
+    "type": "multiple_choice",
+    "content": "CÂU 18: Làn sóng \"Mùa xuân Ả Rập\" từ năm 2010 mở đầu bằng sự kiện nào ở Tunisia?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cuộc tổng tuyển cử dân chủ đầu tiên được tổ chức thành công tại thủ đô Tunis."
+      },
+      {
+        "id": "B",
+        "text": "Thanh niên bán hoa quả tự sát phản đối cảnh sát, châm ngòi biểu tình lật đổ Tổng thống."
+      },
+      {
+        "id": "C",
+        "text": "Quân đội tiến hành đảo chính vũ trang nhằm lật đổ toàn bộ bộ máy nhà nước cũ."
+      },
+      {
+        "id": "D",
+        "text": "Khối quân sự NATO can thiệp trực tiếp bằng vũ trang ngay từ những ngày đầu tiên."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-19",
+    "type": "multiple_choice",
+    "content": "CÂU 19: Giai đoạn biến động ở Liên Xô và Đông Âu (cuối thập niên 80 – đầu thập niên 90) đã tác động như thế nào đến Việt Nam từ phía các thế lực thù địch?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Chấm dứt hoàn toàn các hoạt động chống phá để thiết lập quan hệ ngoại giao bình thường."
+      },
+      {
+        "id": "B",
+        "text": "Lợi dụng tình hình để đẩy mạnh \"Diễn biến hòa bình\", ép Việt Nam xóa bỏ chế độ XHCN."
+      },
+      {
+        "id": "C",
+        "text": "Tăng cường hỗ trợ tài chính để giúp Việt Nam phát triển kinh tế thị trường tự do."
+      },
+      {
+        "id": "D",
+        "text": "Ký kết hiệp ước bảo vệ an ninh và hỗ trợ quân sự toàn diện với Nhà nước Việt Nam."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-20",
+    "type": "multiple_choice",
+    "content": "CÂU 20: Nguyên nhân chính dẫn đến sự cố Formosa Hà Tĩnh vào tháng 4/2016 là gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Các tổ chức phi chính phủ nước ngoài tài trợ tiền kích động người dân biểu tình."
+      },
+      {
+        "id": "B",
+        "text": "Vi phạm và sự cố trong thi công, thử nghiệm nhà máy gây ô nhiễm môi trường biển."
+      },
+      {
+        "id": "C",
+        "text": "Âm mưu xuyên tạc, lật sử của một số cựu quan chức ngoại giao và thành phần chống đối."
+      },
+      {
+        "id": "D",
+        "text": "Sự tranh giành quyền lực gay gắt giữa các phe phái chính trị tại các địa phương."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-21",
+    "type": "multiple_choice",
+    "content": "CÂU 21: Dưới góc độ an ninh xã hội, điểm chung cốt lõi giữa sự kiện Formosa (2016) và vụ việc Nguyễn Đình Bin (2022) là gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Cả hai đều có tổ chức khủng bố quốc tế đứng sau trực tiếp tài trợ kinh phí."
+      },
+      {
+        "id": "B",
+        "text": "Cả hai đều chứng minh sự can thiệp quân sự thô bạo từ các quốc gia bên ngoài."
+      },
+      {
+        "id": "C",
+        "text": "Cả hai đều thu hút dư luận rộng rãi và có nguy cơ bị lợi dụng để kích động."
+      },
+      {
+        "id": "D",
+        "text": "Cả hai đều nhằm mục đích lật đổ chính quyền ngay từ thời điểm mới bắt đầu."
+      }
+    ],
+    "correctAnswer": "C",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-22",
+    "type": "multiple_choice",
+    "content": "CÂU 22: Trước khi đăng tải một nội dung lên mạng xã hội, sinh viên cần phải làm gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Đăng tải ngay lập tức để thu hút lượng tương tác cao từ cộng đồng mạng."
+      },
+      {
+        "id": "B",
+        "text": "Suy nghĩ cẩn trọng và đối chứng thông tin vì nội dung đã đăng rất khó thu hồi."
+      },
+      {
+        "id": "C",
+        "text": "Chia sẻ vào các hội nhóm kín nhằm tránh sự kiểm duyệt của cơ quan chức năng."
+      },
+      {
+        "id": "D",
+        "text": "Chỉnh sửa hình ảnh, video thật giật gân để gây sự chú ý mạnh mẽ nhất."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-23",
+    "type": "multiple_choice",
+    "content": "CÂU 23: Hiến pháp năm 2013 ghi nhận quyền tự do ngôn luận, hội họp, biểu tình của công dân gắn liền với nguyên tắc cốt lõi nào?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Quyền tự do tuyệt đối mà không bị ràng buộc bởi bất kỳ nghĩa vụ pháp lý nào."
+      },
+      {
+        "id": "B",
+        "text": "Quyền tự do theo pháp luật, nhưng không được xâm phạm lợi ích quốc gia và người khác."
+      },
+      {
+        "id": "C",
+        "text": "Quyền tự do bãi khóa, đình công tại mọi không gian công cộng mà không cần xin phép."
+      },
+      {
+        "id": "D",
+        "text": "Quyền tự do hội họp và lập hội có giá trị vượt trên mọi quy định của pháp luật hiện hành."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-24",
+    "type": "multiple_choice",
+    "content": "CÂU 24: Việc bày tỏ chính kiến trên mạng xã hội của sinh viên được xem là có trách nhiệm khi nào?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Dùng lý lẽ xác thực, tuân thủ pháp luật, tôn trọng sự khác biệt và không xúc phạm cá nhân."
+      },
+      {
+        "id": "B",
+        "text": "Dùng cảm xúc cá nhân kêu gọi số đông tham gia công kích những người có ý kiến trái chiều."
+      },
+      {
+        "id": "C",
+        "text": "Tự do đăng tải các tin đồn giật gân chưa qua kiểm chứng nhằm thu hút lượt theo dõi lớn."
+      },
+      {
+        "id": "D",
+        "text": "Nhắm mắt làm theo sự xúi giục, hướng dẫn của các tài khoản ẩn danh, thiếu uy tín trên mạng."
+      }
+    ],
+    "correctAnswer": "A",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-25",
+    "type": "multiple_choice",
+    "content": "CÂU 25: Yếu tố nào sau đây thường được những kẻ tổ chức Cách mạng màu cố tình lựa chọn làm \"ngòi nổ\" để kích động đám đông?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Các chính sách khuyến khích phát triển khoa học công nghệ, kỹ thuật mới."
+      },
+      {
+        "id": "B",
+        "text": "Các sự kiện nhạy cảm như gian lận bầu cử, tham nhũng hoặc khủng hoảng."
+      },
+      {
+        "id": "C",
+        "text": "Các chương trình hợp tác giao lưu văn hóa nghệ thuật với quy mô quốc tế."
+      },
+      {
+        "id": "D",
+        "text": "Các gói cứu trợ kinh tế và phúc lợi xã hội quy mô lớn do chính phủ ban hành."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-26",
+    "type": "multiple_choice",
+    "content": "CÂU 26: Theo bài thuyết trình, năng lực \"tự sửa chữa\" của bộ máy Nhà nước đóng vai trò gì trong việc phòng ngừa Cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Giúp quốc gia dễ dàng kêu gọi được các gói viện trợ tài chính từ quốc tế."
+      },
+      {
+        "id": "B",
+        "text": "Giải quyết tận gốc nguyên nhân gây bất mãn, củng cố niềm tin của nhân dân."
+      },
+      {
+        "id": "C",
+        "text": "Tạo điều kiện thuận lợi để đàn áp triệt để các phong trào biểu tình tự phát."
+      },
+      {
+        "id": "D",
+        "text": "Chuyển hướng sự chú ý của dư luận sang các xung đột chính trị ở bên ngoài."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-27",
+    "type": "multiple_choice",
+    "content": "CÂU 27: Giai đoạn mang tính \"thử nghiệm\" của các kịch bản Cách mạng màu (tiêu biểu như Cách mạng Hoa Hồng) chủ yếu diễn ra ở khu vực nào?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Khu vực Bắc Phi và các quốc gia Trung Đông có nguồn tài nguyên phong phú."
+      },
+      {
+        "id": "B",
+        "text": "Không gian hậu Xô Viết và các quốc gia nằm trong khu vực của Đông Âu."
+      },
+      {
+        "id": "C",
+        "text": "Các quốc gia đang phát triển tại khu vực Mỹ Latinh và vùng biển Caribe."
+      },
+      {
+        "id": "D",
+        "text": "Các nước thuộc khu vực Đông Nam Á vành đai kinh tế Châu Á Thái Bình Dương."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-28",
+    "type": "multiple_choice",
+    "content": "CÂU 28: Các tổ chức phi chính phủ (NGO) nước ngoài thường đóng vai trò gì ở phía sau các phong trào Cách mạng màu?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Đóng vai trò là lực lượng gìn giữ hòa bình, ngăn chặn các xung đột vũ trang."
+      },
+      {
+        "id": "B",
+        "text": "Tài trợ tài chính và đào tạo kỹ năng biểu tình, kháng cự theo kiểu phi bạo lực."
+      },
+      {
+        "id": "C",
+        "text": "Trực tiếp đại diện cho chính phủ đương nhiệm đàm phán với các phe đối lập."
+      },
+      {
+        "id": "D",
+        "text": "Cung cấp vũ khí hạng nặng và huấn luyện quân sự chuyên sâu cho quân nổi dậy."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "medium",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-29",
+    "type": "multiple_choice",
+    "content": "CÂU 29: Trong bối cảnh hội nhập, việc \"kết hợp sức mạnh dân tộc với sức mạnh thời đại\" theo tư tưởng Hồ Chí Minh nhằm mục đích gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Tách biệt hoàn toàn nền kinh tế trong nước khỏi các cuộc khủng hoảng toàn cầu."
+      },
+      {
+        "id": "B",
+        "text": "Tranh thủ nguồn lực bên ngoài nhưng luôn bảo đảm độc lập và quyền tự quyết."
+      },
+      {
+        "id": "C",
+        "text": "Đồng hóa các giá trị văn hóa truyền thống sao cho phù hợp với chuẩn phương Tây."
+      },
+      {
+        "id": "D",
+        "text": "Chuyển giao một phần quyền lực quản lý nhà nước cho các tổ chức kinh tế quốc tế."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "easy",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  },
+  {
+    "id": "cmm-30",
+    "type": "multiple_choice",
+    "content": "CÂU 30: Khi đối mặt với lượng thông tin khổng lồ trên mạng xã hội, người dân cần trang bị kỹ năng gì?",
+    "options": [
+      {
+        "id": "A",
+        "text": "Tin tưởng hoàn toàn vào các tài khoản có lượng theo dõi lớn để cập nhật tin tức nhanh nhất."
+      },
+      {
+        "id": "B",
+        "text": "Cảnh giác trước tin giả, chủ động kiểm chứng nguồn tin qua báo chí chính thống trước khi chia sẻ."
+      },
+      {
+        "id": "C",
+        "text": "Tham gia các nhóm kín ẩn danh để nhận thông tin nội bộ độc quyền chưa được công bố."
+      },
+      {
+        "id": "D",
+        "text": "Tẩy chay toàn bộ nền tảng mạng xã hội, chỉ tiếp nhận thông tin thụ động qua loa phát thanh."
+      }
+    ],
+    "correctAnswer": "B",
+    "difficulty": "hard",
+    "timeLimit": 20,
+    "rewardType": "random_power"
+  }
+];
+
 export const PRESET_QUIZ_SETS: QuizSet[] = [
+  {
+    id: 'quiz-mr-qanh-business',
+    title: 'Mr. QANH BUSINESS',
+    description: 'Bộ 30 câu hỏi trắc nghiệm chuyên đề Mr. QANH BUSINESS.',
+    ownerName: 'Mr. QANH',
+    createdAt: new Date().toISOString(),
+    questions: MR_QANH_QUESTIONS,
+  },
   {
     id: 'quiz-tthcm-cach-mang-mau',
     title: 'Tư Tưởng Hồ Chí Minh & Phòng Ngừa "Cách Mạng Màu"',
-    description: 'Bộ câu hỏi chuyên đề ôn tập & mini game thuyết trình môn Tư tưởng Hồ Chí Minh về nhận diện, phòng chống nguy cơ "Cách mạng màu" và Diễn biến hòa bình.',
+    description: 'Bộ 30 câu hỏi trắc nghiệm chuyên đề ôn tập & mini game thuyết trình môn Tư tưởng Hồ Chí Minh về nhận diện, phòng chống nguy cơ "Cách mạng màu" và Diễn biến hòa bình.',
     ownerName: 'Nhóm Thuyết Trình NEU — TTHCM',
     createdAt: new Date().toISOString(),
-    questions: [
-      {
-        id: 'cmm-01',
-        type: 'multiple_choice',
-        content: 'CÂU 1: Phương thức nòng cốt được các cuộc cách mạng màu sử dụng để lật đổ chế độ hiện tại là gì?',
-        options: [
-          { id: 'A', text: 'Đấu tranh quân sự và chiến tranh du kích.' },
-          { id: 'B', text: 'Đấu tranh bất bạo động.' },
-          { id: 'C', text: 'Đảo chính quân sự bất ngờ.' },
-          { id: 'D', text: 'Tấn công vũ trang hợp đồng binh chủng.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Phương thức nòng cốt của Cách mạng màu là triệt để lợi dụng danh nghĩa "đấu tranh bất bạo động", biểu tình đường phố, đình công, bất tuân dân sự để gây sức ép lật đổ chính quyền.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-02',
-        type: 'multiple_choice',
-        content: 'CÂU 2: Bản chất thực sự của "Cách mạng màu" là gì?',
-        options: [
-          { id: 'A', text: 'Phong trào đấu tranh vũ trang công khai của nhân dân lao động nhằm đòi lại quyền sống.' },
-          { id: 'B', text: 'Sự thay đổi thể chế, ép buộc chính quyền đương nhiệm từ chức để đưa lực lượng đối lập lên nắm quyền, phục vụ lợi ích địa chính trị bên ngoài.' },
-          { id: 'C', text: 'Cuộc cải cách kinh tế - xã hội ôn hòa do chính phủ đương nhiệm chủ động khởi xướng.' },
-          { id: 'D', text: 'Phong trào bảo vệ môi trường và đòi dân sinh thuần túy của các tổ chức phi chính phủ.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Bản chất của Cách mạng màu là thay đổi thể chế chính trị, hạ bệ chính quyền đương nhiệm để đưa lực lượng thân phương Tây lên nắm quyền, phục vụ mưu đồ địa chính trị của thế lực bên ngoài.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-03',
-        type: 'multiple_choice',
-        content: 'CÂU 3: Lực lượng nào thường bị các đối tượng chống đối kích động, lôi kéo làm "nòng cốt" xuống đường trong các cuộc Cách mạng màu?',
-        options: [
-          { id: 'A', text: 'Lực lượng vũ trang và cảnh sát.' },
-          { id: 'B', text: 'Doanh nhân và chủ tập đoàn kinh tế.' },
-          { id: 'C', text: 'Sinh viên, giới trẻ và các tổ chức xã hội dân sự.' },
-          { id: 'D', text: 'Cán bộ hưu trí và nông dân.' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Giới trẻ, học sinh - sinh viên và các tổ chức xã hội dân sự (NGOs) là đối tượng giàu nhiệt huyết nhưng thiếu kinh nghiệm chính trị, rất dễ bị tác động tâm lý, lôi kéo và kích động.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-04',
-        type: 'multiple_choice',
-        content: 'CÂU 4: Theo kết luận của bài thuyết trình, nhiệm vụ ngăn chặn nguy cơ "Cách mạng màu" thuộc về ai?',
-        options: [
-          { id: 'A', text: 'Chỉ riêng lực lượng thanh niên, sinh viên tại các thành phố lớn' },
-          { id: 'B', text: 'Riêng các cơ quan công an và quân đội trực trách nhiệm bảo vệ an ninh' },
-          { id: 'C', text: 'Toàn xã hội, trong đó Đảng và Nhà nước giữ vai trò định hướng' },
-          { id: 'D', text: 'Các tổ chức quốc tế và các cơ quan ngoại giao nước ngoài tại Việt Nam' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Nhiệm vụ phòng chống Cách mạng màu là trách nhiệm chung của toàn xã hội, khối đại đoàn kết toàn dân, trong đó Đảng và Nhà nước giữ vai trò lãnh đạo và định hướng chiến lược.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-05',
-        type: 'multiple_choice',
-        content: 'CÂU 5: Hậu quả thực tế chung của các cuộc cách mạng màu tại nhiều quốc gia trên thế giới là gì?',
-        options: [
-          { id: 'A', text: 'Khủng hoảng thể chế, suy sụp kinh tế và xung đột vũ trang' },
-          { id: 'B', text: 'Quá trình hội nhập quốc tế diễn ra suôn sẻ và chủ quyền được củng cố' },
-          { id: 'C', text: 'Sự đoàn kết nội bộ dân tộc được tăng cường mạnh mẽ hơn' },
-          { id: 'D', text: 'Sự thịnh vượng kinh tế vượt bậc và nền dân chủ vững chắc' },
-        ],
-        correctAnswer: 'A',
-        explanation: 'Thực tế tại các quốc gia như Ukraine, Georgia, Libya, Syria cho thấy Cách mạng màu chỉ đem lại khủng hoảng thể chế nghiêm trọng, suy thoái kinh tế, chia rẽ xã hội và nội chiến kéo dài.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-06',
-        type: 'multiple_choice',
-        content: 'CÂU 6: Tư tưởng Hồ Chí Minh giữ vai trò gì trong công cuộc phòng ngừa và làm thất bại âm mưu "Cách mạng màu"?',
-        options: [
-          { id: 'A', text: 'Là công cụ pháp lý duy nhất để xử phạt các hành vi vi phạm.' },
-          { id: 'B', text: 'Nền tảng tư tưởng, kim chỉ nam và "liều thuốc căn cơ" để xây dựng khối đại đoàn kết và củng cố Nhà nước.' },
-          { id: 'C', text: 'Là tài liệu chỉ dùng trong nghiên cứu lý luận học thuật.' },
-          { id: 'D', text: 'Là phương pháp đấu tranh quân sự phòng thủ biên giới.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Tư tưởng Hồ Chí Minh là nền tảng kim chỉ nam soi đường, là "liều thuốc căn cơ" để củng cố thế trận lòng dân, xây dựng Đảng trong sạch vững mạnh và Nhà nước của dân, do dân, vì dân.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-07',
-        type: 'multiple_choice',
-        content: 'CÂU 7: Để triệt phá "nguồn gốc bất mãn" mà các thế lực thù địch có thể khai thác để kích động Cách mạng màu, vận dụng Tư tưởng Hồ Chí Minh cần tập trung vào điều gì?',
-        options: [
-          { id: 'A', text: 'Thắt chặt thông tin và cấm sử dụng Internet.' },
-          { id: 'B', text: 'Lấy dân làm gốc, chủ động giải quyết các bức xúc chính đáng của nhân dân như tham nhũng, bất bình đẳng, khiếu kiện.' },
-          { id: 'C', text: 'Bỏ qua các khiếu nại nhỏ để tập trung phát triển kinh tế.' },
-          { id: 'D', text: 'Tăng cường lực lượng quân sự tại các đô thị lớn.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Thực hiện phương châm "Dân là gốc", chủ động lắng nghe và giải quyết dứt điểm các bức xúc, bất bình đẳng, đẩy lùi tham nhũng lãng phí để không tạo cớ cho các thế lực thù địch châm ngòi bạo loạn.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-08',
-        type: 'multiple_choice',
-        content: 'CÂU 8: Trong bối cảnh hội nhập quốc tế, vận dụng Tư tưởng Hồ Chí Minh về độc lập, tự chủ đòi hỏi quốc gia phải làm gì?',
-        options: [
-          { id: 'A', text: 'Đóng cửa nền kinh tế để tránh sự can thiệp từ bên ngoài.' },
-          { id: 'B', text: 'Phụ thuộc hoàn toàn vào các liên minh quân sự lớn.' },
-          { id: 'C', text: 'Chủ động hội nhập, hợp tác quốc tế nhưng vẫn giữ vững độc lập, chủ quyền và quyền tự quyết dân tộc.' },
-          { id: 'D', text: 'Tiếp thu toàn bộ mô hình chính trị và kinh tế của các nước phương Tây.' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Chủ tịch Hồ Chí Minh khẳng định: "Độc lập tự chủ là trên hết". Cần chủ động, tích cực hội nhập kinh tế quốc tế nhưng kiên quyết giữ vững chủ quyền, an ninh và con đường đi lên CNXH.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-09',
-        type: 'multiple_choice',
-        content: 'CÂU 9: Đối với học sinh, sinh viên, yếu tố nào được xác định là nền tảng cốt lõi để tự đề kháng trước các thông tin sai lệch?',
-        options: [
-          { id: 'A', text: 'Sự nhạy bén trong việc nắm bắt xu hướng giải trí trên mạng' },
-          { id: 'B', text: 'Năng lực chuyên môn, bản lĩnh và đạo đức chính trị' },
-          { id: 'C', text: 'Khả năng tham gia các phong trào biểu tình phản đối xã hội' },
-          { id: 'D', text: 'Việc từ chối học tập lý luận chính trị để giữ tính khách quan' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Năng lực chuyên môn, tri thức khoa học kết hợp với bản lĩnh chính trị vững vàng và đạo đức trong sáng là "kháng thể" tốt nhất giúp người trẻ phân định đúng - sai.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-10',
-        type: 'multiple_choice',
-        content: 'CÂU 10: Cách đặt tên cho các cuộc cách mạng màu thường gắn liền với yếu tố nào nhằm dễ dàng nhận diện và tạo diện mạo ôn hòa trước công luận?',
-        options: [
-          { id: 'A', text: 'Mốc thời gian năm diễn ra sự kiện lịch sử' },
-          { id: 'B', text: 'Tên của thành phố thủ đô nổ ra bạo loạn' },
-          { id: 'C', text: 'Một màu sắc hay loài hoa biểu trưng' },
-          { id: 'D', text: 'Tên của nhà lãnh đạo phe đối lập' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Các chiến dịch Cách mạng màu luôn chọn màu sắc hoặc loài hoa biểu trưng (Hoa Hồng, Cam, Tulip, Hoa Lài) để xây dựng hình ảnh ôn hòa, lãng mạn hóa trước truyền thông phương Tây.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-11',
-        type: 'multiple_choice',
-        content: 'CÂU 11: Nguyên nhân chủ yếu dẫn đến tình trạng khủng hoảng, bất ổn định chính trị trong nước tạo cơ sở cho cách mạng màu là gì?',
-        options: [
-          { id: 'A', text: 'Sự suy giảm nguồn vốn đầu tư trực tiếp nước ngoài' },
-          { id: 'B', text: 'Tranh giành quyền lực giữa các phe phái và nạn quan liêu, tham nhũng' },
-          { id: 'C', text: 'Sự can thiệp quân sự trực tiếp từ các liên minh quân sự' },
-          { id: 'D', text: 'Sự bùng nổ của các thảm họa thiên tai biến đổi khí hậu' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Nguyên nhân nội tại nguy hiểm nhất chính là sự suy thoái chính trị, bè phái tranh giành quyền lực, quan liêu, xa dân và tham nhũng làm mất lòng tin của quần chúng.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-12',
-        type: 'multiple_choice',
-        content: 'CÂU 12: Cuộc cách mạng nào ở khu vực Đông Âu và Không gian hậu Xô Viết năm 2003 đã khiến Tổng thống Eduard Shevardnadze bị ép từ chức sau khi người biểu tình xông vào đập phá Quốc hội?',
-        options: [
-          { id: 'A', text: 'Cách mạng Hoa Hồng (Georgia)' },
-          { id: 'B', text: 'Cách mạng Hoa Lài (Tunisia)' },
-          { id: 'C', text: 'Cách mạng Tulip (Kyrgyzstan)' },
-          { id: 'D', text: 'Cách mạng Cam (Ukraine)' },
-        ],
-        correctAnswer: 'A',
-        explanation: 'Cách mạng Hoa Hồng (Rose Revolution) tại Georgia vào tháng 11/2003 đã lật đổ Tổng thống Eduard Shevardnadze sau khi phe đối lập xông vào tòa nhà Quốc hội mang theo những cành hoa hồng.',
-        difficulty: 'hard',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-13',
-        type: 'multiple_choice',
-        content: 'CÂU 13: Nội dung nào sau đây là quan điểm cốt lõi của Tư tưởng Hồ Chí Minh được vận dụng để xây dựng "thế trận lòng dân" nhằm phòng ngừa cách mạng màu?',
-        options: [
-          { id: 'A', text: 'Ưu tiên phát triển lực lượng vũ trang hiện đại lên hàng đầu' },
-          { id: 'B', text: 'Lấy dân làm gốc, bảo đảm quyền và lợi ích chính đáng của nhân dân' },
-          { id: 'C', text: 'Tập trung toàn bộ nguồn lực quốc gia cho hội nhập kinh tế quốc tế' },
-          { id: 'D', text: 'Tăng cường quyền lực tuyệt đối cho các cơ quan quản lý nhà nước' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Bác Hồ dạy: "Trong bầu trời không gì quý bằng nhân dân. Trong thế giới không gì mạnh bằng lực lượng đoàn kết của nhân dân." Xây dựng thế trận lòng dân bắt đầu từ việc chăm lo quyền lợi chính đáng của nhân dân.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-14',
-        type: 'multiple_choice',
-        content: 'CÂU 14: Theo Tư tưởng Hồ Chí Minh, đội ngũ cán bộ và các cơ quan Nhà nước phải đóng vai trò như thế nào đối với nhân dân?',
-        options: [
-          { id: 'A', text: 'Là "công bộc của dân", gần dân, hiểu dân và phục vụ nhân dân' },
-          { id: 'B', text: 'Là cơ quan quyền lực đứng trên để điều khiển và giám sát mọi hoạt động xã hội' },
-          { id: 'C', text: 'Là lực lượng chuyên gia độc lập đưa ra quyết định không cần tham khảo dân' },
-          { id: 'D', text: 'Là những nhà quản lý kinh tế tập trung thuần túy không quan tâm chính trị' },
-        ],
-        correctAnswer: 'A',
-        explanation: 'Chủ tịch Hồ Chí Minh căn dặn: Cán bộ từ Chủ tịch nước đến cán bộ cơ sở đều là "công bộc của dân", việc gì có lợi cho dân phải hết sức làm, việc gì có hại cho dân phải hết sức tránh.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-15',
-        type: 'multiple_choice',
-        content: 'CÂU 15: Phương pháp học tập lịch sử và lý luận chính trị nào được khuyến nghị cho học sinh, sinh viên để tránh bị lừa phỉnh bởi luận điệu xuyên tạc?',
-        options: [
-          { id: 'A', text: 'Học thuộc lòng các mốc thời gian sự kiện ghi trong sách giáo khoa đối phó thi cử' },
-          { id: 'B', text: 'Chỉ tìm kiếm thông tin đánh giá về lịch sử trên các mạng xã hội nước ngoài' },
-          { id: 'C', text: 'Học tập chủ động, đọc giáo trình kết hợp tài liệu mở rộng và đặt sự kiện vào bối cảnh lịch sử' },
-          { id: 'D', text: 'Miễn dịch với mọi tranh luận lịch sử và chỉ tập trung vào chuyên ngành kỹ thuật' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Phương pháp khoa học là học tập chủ động, nghiên cứu giáo trình kết hợp tài liệu kiểm chứng, hiểu bản chất sự kiện trong bối cảnh lịch sử cụ thể, không học vẹt.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-16',
-        type: 'multiple_choice',
-        content: 'CÂU 16: Sự kiện Cách mạng Hoa Hồng tại Georgia (2003) bắt nguồn từ việc lực lượng đối lập cáo buộc điều gì?',
-        options: [
-          { id: 'A', text: 'Gian lận trong bầu cử Quốc hội.' },
-          { id: 'B', text: 'Tham gia liên minh quân sự với các nước láng giềng.' },
-          { id: 'C', text: 'Phá hoại hệ thống môi trường biển và sinh kế của người dân.' },
-          { id: 'D', text: 'Cắt giảm ngân sách phúc lợi xã hội và giáo dục.' },
-        ],
-        correctAnswer: 'A',
-        explanation: 'Phe đối lập do Mikheil Saakashvili đứng đầu cáo buộc chính phủ đương nhiệm gian lận kết quả bầu cử Quốc hội tháng 11/2003 để kêu gọi người dân xuống đường bao vây Quốc hội.',
-        difficulty: 'hard',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-17',
-        type: 'multiple_choice',
-        content: 'CÂU 17: Đâu là một trong những hậu quả thực tế nghiêm trọng nhất về mặt thể chế và xã hội tại các quốc gia hứng chịu "Cách mạng màu"?',
-        options: [
-          { id: 'A', text: 'Hệ thống hành chính nhà nước trở nên vô cùng tinh gọn, minh bạch và hiệu quả tuyệt đối dưới sự điều hành của lực lượng mới.' },
-          { id: 'B', text: 'Thể chế nhà nước tan rã, bộ máy yếu kém, các phe phái liên tục tranh giành quyền lực, xã hội chia rẽ sâu sắc và bùng nổ xung đột vũ trang kéo dài.' },
-          { id: 'C', text: 'Đạt được sự đồng thuận tuyệt đối giữa tất cả các sắc tộc, tôn giáo và các đảng phái chính trị đối lập trong xã hội.' },
-          { id: 'D', text: 'Hoàn toàn xóa bỏ được tình trạng tham nhũng, quan liêu và thiết lập nền kinh tế thị trường phát triển vượt bậc.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Hậu quả bi kịch nhất là bộ máy nhà nước tan rã, phe phái cấu xé, xã hội chia rẽ sâu sắc, kinh tế lụn bại và biến đất nước thành con tốt trong trò chơi địa chính trị của các nước lớn.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-18',
-        type: 'multiple_choice',
-        content: 'CÂU 18: Làn sóng "Mùa xuân Ả Rập" từ năm 2010 mở đầu bằng sự kiện nào ở Tunisia?',
-        options: [
-          { id: 'A', text: 'Cuộc tổng tuyển cử dân chủ đầu tiên ở thủ đô Tunis.' },
-          { id: 'B', text: 'Một thanh niên bán hoa quả tự sát để phản đối cảnh sát, mạng xã hội thổi bùng ngọn lửa phẫn nộ lật đổ Tổng thống Ben Ali.' },
-          { id: 'C', text: 'Quân đội tiến hành đảo chính lật đổ bộ máy nhà nước cũ.' },
-          { id: 'D', text: 'Khối NATO can thiệp quân sự trực tiếp từ những ngày đầu tiên.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Vụ việc thanh niên Mohamed Bouazizi tự thiêu ngày 17/12/2010 đã bị truyền thông mạng xã hội và các thế lực thổi bùng thành làn sóng bạo loạn lật đổ chính quyền Ben Ali, khởi đầu chuỗi khủng hoảng Mùa xuân Ả Rập.',
-        difficulty: 'hard',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-19',
-        type: 'multiple_choice',
-        content: 'CÂU 19: Giai đoạn biến động ở Liên Xô và Đông Âu (cuối thập niên 1980 – đầu thập niên 1990) đã tác động như thế nào đến Việt Nam từ phía các thế lực thù địch?',
-        options: [
-          { id: 'A', text: 'Chấm dứt hoàn toàn các hoạt động chống phá Việt Nam.' },
-          { id: 'B', text: 'Càng quyết liệt thúc đẩy chiến lược "Diễn biến hòa bình", tìm cách lợi dụng biến chuyển để ép Việt Nam xóa bỏ chế độ xã hội chủ nghĩa.' },
-          { id: 'C', text: 'Hỗ trợ toàn diện tài chính để giúp Việt Nam phát triển kinh tế thị trường tư bản.' },
-          { id: 'D', text: 'Ký kết hiệp ước bảo vệ an ninh chung giữa Liên Xô và Việt Nam.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Thừa thế sau sự sụp đổ của hệ thống XHCN Đông Âu và Liên Xô, các thế lực thù địch đẩy mạnh chiến lược "Diễn biến hòa bình" hòng gây ra hiệu ứng domino sụp đổ tại Việt Nam.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-20',
-        type: 'multiple_choice',
-        content: 'CÂU 20: Nguyên nhân chính dẫn đến sự cố Formosa Hà Tĩnh vào tháng 4/2016 là gì?',
-        options: [
-          { id: 'A', text: 'Do các tổ chức phi chính phủ nước ngoài tài trợ tiền cho người dân biểu tình.' },
-          { id: 'B', text: 'Do những vi phạm và sự cố trong quá trình thi công, vận hành thử nghiệm tổ hợp nhà máy gây ô nhiễm môi trường biển.' },
-          { id: 'C', text: 'Do âm mưu lật sử của các cựu quan chức ngoại giao.' },
-          { id: 'D', text: 'Do sự tranh giành quyền lực giữa các phe phái chính trị trong nước.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Sự cố môi trường biển 4 tỉnh miền Trung năm 2016 bắt nguồn trực tiếp từ vi phạm và sự cố xả thải chất độc trong quá trình thi công, vận hành thử nghiệm của Công ty Formosa Hà Tĩnh.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-21',
-        type: 'multiple_choice',
-        content: 'CÂU 21: Đối với học sinh, sinh viên, việc học tập lịch sử và lý luận chính trị được yêu cầu thực hiện với thái độ nào?',
-        options: [
-          { id: 'A', text: 'Học thuộc lòng các mốc thời gian để thi cử qua môn.' },
-          { id: 'B', text: 'Thái độ chủ động: đọc giáo trình kèm tài liệu mở rộng, tham gia thảo luận, tranh biện, hỏi giảng viên và đặt sự kiện vào bối cảnh lịch sử.' },
-          { id: 'C', text: 'Tuyệt đối không bàn luận hay tranh cãi về các vấn đề lịch sử đã qua.' },
-          { id: 'D', text: 'Chỉ học các tài liệu lịch sử không chính thống trên mạng xã hội để tăng tính đa chiều.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Thái độ chủ động, tư duy phản biện, tranh biện khoa học dựa trên tài liệu chính thống giúp người học nắm chắc bản chất, không bị các luận điệu xuyên tạc dẫn dắt.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-22',
-        type: 'multiple_choice',
-        content: 'CÂU 22: Trước khi đăng tải một nội dung lên mạng xã hội, sinh viên cần phải làm gì theo nội dung bài thuyết trình?',
-        options: [
-          { id: 'A', text: 'Đăng ngay lập tức để thu hút lượng tương tác cao nhất từ cộng đồng mạng.' },
-          { id: 'B', text: 'Suy nghĩ kỹ vì những gì đã đăng rất khó thu hồi.' },
-          { id: 'C', text: 'Chia sẻ vào các hội nhóm kín để tránh sự kiểm duyệt của cơ quan chức năng.' },
-          { id: 'D', text: 'Chỉnh sửa video/hình ảnh thật giật gân để gây chú ý.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Không gian mạng có tính lưu vết vĩnh viễn và lan truyền cấp số nhân. Hãy suy nghĩ chín chắn trước khi đăng tải bất cứ nội dung gì ("Think before you post").',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-23',
-        type: 'multiple_choice',
-        content: 'CÂU 23: Hiến pháp năm 2013 ghi nhận các quyền tự do nào của công dân và đi kèm nguyên tắc quan trọng gì?',
-        options: [
-          { id: 'A', text: 'Quyền tự do tuyệt đối không bị ràng buộc bởi bất kỳ nghĩa vụ nào.' },
-          { id: 'B', text: 'Các quyền tự do ngôn luận, báo chí, tiếp cận thông tin, hội họp, lập hội và biểu tình theo pháp luật, đồng thời quyền công dân không tách rời nghĩa vụ, không được xâm phạm lợi ích quốc gia và quyền, lợi ích hợp pháp của người khác.' },
-          { id: 'C', text: 'Quyền đình công và bãi khóa tự do tại mọi không gian công cộng không cần xin phép.' },
-          { id: 'D', text: 'Quyền tự do ngôn luận vượt trên các quy định của pháp luật hiện hành.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Điều 15 và 25 Hiến pháp 2013 khẳng định công dân có quyền tự do nhưng phải thực hiện "theo quy định của pháp luật", quyền công dân không tách rời nghĩa vụ đối với quốc gia.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-24',
-        type: 'multiple_choice',
-        content: 'CÂU 24: Việc bày tỏ chính kiến trên mạng xã hội của sinh viên được xem là có trách nhiệm khi nào?',
-        options: [
-          { id: 'A', text: 'Sử dụng lý lẽ và dẫn chứng xác thực, tuân thủ pháp luật, tôn trọng ý kiến khác biệt và không dùng lời lẽ xúc phạm.' },
-          { id: 'B', text: 'Dùng cảm xúc cá nhân để kêu gọi đông đảo bạn bè vào công kích người khác.' },
-          { id: 'C', text: 'Tự do đăng tải lại các tin đồn chưa kiểm chứng để thu hút lượt theo dõi.' },
-          { id: 'D', text: 'Nghe theo sự hướng dẫn của các tài khoản ẩn danh trên mạng.' },
-        ],
-        correctAnswer: 'A',
-        explanation: 'Bày tỏ chính kiến văn minh, có trách nhiệm đòi hỏi sự tôn trọng pháp luật, dẫn chứng kiểm chứng khoa học và thái độ tôn trọng người khác.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-25',
-        type: 'multiple_choice',
-        content: 'CÂU 25: Nhiệm vụ quan trọng hàng đầu của sinh viên trong việc xây dựng "sức đề kháng" bản thân trước các luận điệu sai trái là gì?',
-        options: [
-          { id: 'A', text: 'Tích cực tham gia vào tất cả các cuộc tranh luận trên mạng xã hội.' },
-          { id: 'B', text: 'Học tập, rèn luyện chuyên môn nghiêm túc, trau dồi đạo đức, bản lĩnh và tư duy phản biện.' },
-          { id: 'C', text: 'Không cần quan tâm đến các vấn đề chính trị - xã hội của đất nước.' },
-          { id: 'D', text: 'Chỉ tập trung học ngoại ngữ để chuẩn bị đi du học.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Nền tảng căn bản nhất của sinh viên là hoàn thành tốt nhiệm vụ học tập, rèn đức luyện tài, xây dựng lập trường tư tưởng kiên định và tư duy phản biện sắc bén.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-26',
-        type: 'multiple_choice',
-        content: 'CÂU 26: Theo Hiến pháp năm 2013, việc thực hiện các quyền tự do công dân (như tự do ngôn luận, hội họp) phải gắn liền với điều kiện gì?',
-        options: [
-          { id: 'A', text: 'Không có bất kỳ giới hạn hay nghĩa vụ nào đi kèm.' },
-          { id: 'B', text: 'Phải tuân thủ quy định của pháp luật, không được xâm phạm lợi ích quốc gia và quyền, lợi ích hợp pháp của người khác.' },
-          { id: 'C', text: 'Chỉ được thực hiện khi có sự đồng ý của chính quyền quốc tế.' },
-          { id: 'D', text: 'Được phép vi phạm pháp luật nếu nhằm mục đích bày tỏ quan điểm cá nhân.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Tự do của một cá nhân không được xâm phạm tới an ninh trật tự quốc gia và quyền tự do, lợi ích hợp pháp của cộng đồng và các cá nhân khác.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-27',
-        type: 'multiple_choice',
-        content: 'CÂU 27: Tình trạng khủng hoảng chính trị trong nước - nguyên nhân của cách mạng màu kéo dài chủ yếu xuất phát từ yếu tố nào?',
-        options: [
-          { id: 'A', text: 'Sự can thiệp quân sự thô bạo từ các liên minh quân sự lớn bên ngoài nhằm kiểm soát nguồn tài nguyên thiên nhiên của quốc gia đó.' },
-          { id: 'B', text: 'Sự tranh giành quyền lực giữa các phe phái chính trị, sự thiếu nhất trí trong đường lối đối nội - đối ngoại và nạn quan liêu, tham nhũng trong lãnh đạo các cấp dẫn tới phẫn nộ trong quần chúng.' },
-          { id: 'C', text: 'Sự sụp đổ hoàn toàn của hệ thống hạ tầng giao thông đô thị làm tê liệt các hoạt động sản xuất kinh doanh và thương mại quốc tế.' },
-          { id: 'D', text: 'Sự bùng nổ của các cuộc đình công tự phát do các công ty đa quốc gia trực tiếp tài trợ tài chính để ép chính phủ nhượng bộ về thuế quan.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Khủng hoảng chính trị nội bộ, mâu thuẫn tranh giành quyền lực và tệ nạn quan liêu tham nhũng chính là mảnh đất màu mỡ cho các thế lực bên ngoài thổi bùng ngọn lửa cách mạng màu.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-28',
-        type: 'multiple_choice',
-        content: 'CÂU 28: Mục đích bề nổi được các lực lượng chủ mưu tuyên bố công khai khi tiến hành các cuộc cách mạng màu là gì?',
-        options: [
-          { id: 'A', text: 'Đòi hỏi chính quyền đương nhiệm phải nhượng lại một phần lãnh thổ cho các lực lượng ly khai trong nước kiểm soát hoàn toàn.' },
-          { id: 'B', text: 'Hướng tới mục tiêu thúc đẩy quá trình "dân chủ hóa", lật đổ bộ máy độc tài để xây dựng thể chế dân chủ phương Tây, đòi minh bạch bầu cử, chống tham nhũng, cải cách kinh tế và bảo vệ nhân quyền.' },
-          { id: 'C', text: 'Xóa bỏ hoàn toàn hệ thống tiền tệ quốc gia để chuyển sang sử dụng một đồng tiền chung do các định chế tài chính quốc tế quản lý trực tiếp.' },
-          { id: 'D', text: 'Thành lập một liên minh kinh tế - quân sự mới nhằm đối trọng trực tiếp với sức ảnh hưởng của các cường quốc lân cận.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Phe chủ mưu luôn giương cao các ngọn cờ dân chủ, nhân quyền, chống độc tài, minh bạch bầu cử nhằm thu hút sự ủng hộ của quần chúng ngây thơ và tạo cớ can thiệp quốc tế.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-29',
-        type: 'multiple_choice',
-        content: 'CÂU 29: Trong giai đoạn sau năm 1995 đến nay, khi Việt Nam đổi mới và mở rộng quan hệ đối ngoại kết hợp với sự phát triển của Internet, các thế lực thù địch đã thay đổi phương thức chống phá như thế nào?',
-        options: [
-          { id: 'A', text: 'Quay trở lại sử dụng chiến tranh tổng lực quân sự quy mô lớn nhằm đánh chiếm biên giới và các thành phố trọng điểm của nước ta.' },
-          { id: 'B', text: 'Áp dụng các biện pháp cấm vận kinh tế và cô lập ngoại giao ngặt nghèo nhất để làm kiệt quệ hoàn toàn tiềm lực kinh tế quốc gia.' },
-          { id: 'C', text: 'Chuyển sang chiến lược "Diễn biến hòa bình" tinh vi hơn qua không gian mạng và truyền thông số nhằm thay đổi hệ thống chính trị của Việt Nam từ bên trong.' },
-          { id: 'D', text: 'Tài trợ trực tiếp cho các tổ chức khủng bố quốc tế để tiến hành các vụ bạo loạn vũ trang tại khu vực Tây Nguyên và miền Tây Nam Bộ.' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Các thế lực chuyển trọng tâm sang "mặt trận không khói súng": dùng mạng xã hội, truyền thông số, tài trợ ngầm để kích động "tự diễn biến", "tự chuyển hóa", lật đổ từ bên trong.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-30',
-        type: 'multiple_choice',
-        content: 'CÂU 30: Khi đối mặt với lượng thông tin khổng lồ trên mạng xã hội, người dân cần phải trang bị kỹ năng gì để tự bảo vệ mình trước thông tin sai lệch?',
-        options: [
-          { id: 'A', text: 'Tin tưởng hoàn toàn vào các tài khoản có lượng người theo dõi lớn nhất để không bị bỏ lỡ các tin tức thời sự nóng hổi.' },
-          { id: 'B', text: 'Tỉnh táo nhận biết mạng xã hội có tốc độ lan truyền nhanh, khó kiểm chứng, dễ bị cắt ghép/giật gân; cần đặt câu hỏi về nguồn tin, đối chiếu báo chí chính thống và không chia sẻ khi chưa kiểm chứng.' },
-          { id: 'C', text: 'Lựa chọn tham gia vào các nhóm kín ẩn danh trên mạng để nhận các thông tin nội bộ độc quyền chưa được kiểm chứng chính thức.' },
-          { id: 'D', text: 'Tẩy chay toàn bộ các nền tảng mạng xã hội và chỉ tiếp nhận thông tin phát thanh truyền hình trực tiếp truyền thống.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Cần có thói quen "hoài nghi lành mạnh", đặt câu hỏi về động cơ của người đưa tin, kiểm tra chéo nguồn tin trên báo chí chính thống và tuyệt đối không chia sẻ tin giật gân chưa xác thực.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'cmm-31',
-        type: 'multiple_choice',
-        content: 'CÂU 31: Vận dụng tư tưởng Hồ Chí Minh về việc xây dựng khối đại đoàn kết toàn dân tộc đòi hỏi xã hội hiện đại cần phải thực hiện điều gì?',
-        options: [
-          { id: 'A', text: 'Bắt buộc mọi tầng lớp nhân dân phải có chung một hệ tư tưởng chính trị tuyệt đối và đồng nhất trong mọi hoàn cảnh lịch sử.' },
-          { id: 'B', text: 'Tôn trọng sự khác biệt chính đáng giữa các nhóm xã hội, tăng cường đối thoại, giải quyết hài hòa các lợi ích và quan tâm đến mọi tầng lớp từ thanh niên, công nhân, trí thức đến các cộng đồng tôn giáo, dân tộc.' },
-          { id: 'C', text: 'Tập trung mọi nguồn lực tài chính quốc gia để hỗ trợ riêng cho tầng lớp trí thức và doanh nhân phát triển kinh tế tư nhân.' },
-          { id: 'D', text: 'Xóa bỏ hoàn toàn ranh giới giữa các vùng miền và giải thể các tổ chức đoàn thể chính trị - xã hội trung gian.' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Đại đoàn kết toàn dân tộc theo tư tưởng Bác là cầu đồng tồn dị, tôn trọng khác biệt chính đáng, chăm lo lợi ích của mọi tầng lớp nhân dân vì mục tiêu chung độc lập, tự do và hạnh phúc.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-    ],
-  },
-  {
-    id: 'quiz-general-knowledge',
-    title: 'Giải Mã Tri Thức Tổng Hợp',
-    description: 'Bộ câu hỏi đa lĩnh vực về khoa học, lịch sử, địa lý và tư duy logic dành cho học sinh, sinh viên.',
-    ownerName: 'Hệ thống Maze Rush',
-    createdAt: new Date().toISOString(),
-    questions: [
-      {
-        id: 'q-gen-1',
-        type: 'multiple_choice',
-        content: 'Hành tinh nào trong Hệ Mặt Trời được mệnh danh là "Hành tinh Đỏ"?',
-        options: [
-          { id: 'A', text: 'Sao Kim (Venus)' },
-          { id: 'B', text: 'Sao Hỏa (Mars)' },
-          { id: 'C', text: 'Sao Mộc (Jupiter)' },
-          { id: 'D', text: 'Sao Thủy (Mercury)' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Sao Hỏa được gọi là Hành tinh Đỏ do bề mặt chứa nhiều oxit sắt (gỉ sắt) tạo nên màu đỏ đặc trưng.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-2',
-        type: 'multiple_choice',
-        content: 'Nước sôi ở bao nhiêu độ C trong điều kiện áp suất khí quyển tiêu chuẩn?',
-        options: [
-          { id: 'A', text: '90°C' },
-          { id: 'B', text: '100°C' },
-          { id: 'C', text: '110°C' },
-          { id: 'D', text: '120°C' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Ở áp suất khí quyển tiêu chuẩn (1 atm / 101.3 kPa), nhiệt độ sôi của nước nguyên chất là 100°C.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-3',
-        type: 'multiple_choice',
-        content: 'Ai là tác giả của thuyết Tương đối hẹp và Tương đối rộng?',
-        options: [
-          { id: 'A', text: 'Isaac Newton' },
-          { id: 'B', text: 'Nikola Tesla' },
-          { id: 'C', text: 'Albert Einstein' },
-          { id: 'D', text: 'Stephen Hawking' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Albert Einstein đã công bố thuyết Tương đối hẹp năm 1905 và Tương đối rộng năm 1915, làm thay đổi nền vật lý hiện đại.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-4',
-        type: 'multiple_choice',
-        content: 'Đại dương nào có diện tích lớn nhất trên Trái Đất?',
-        options: [
-          { id: 'A', text: 'Đại Tây Dương' },
-          { id: 'B', text: 'Ấn Độ Dương' },
-          { id: 'C', text: 'Bắc Băng Dương' },
-          { id: 'D', text: 'Thái Bình Dương' },
-        ],
-        correctAnswer: 'D',
-        explanation: 'Thái Bình Dương là đại dương lớn nhất và sâu nhất trên Trái Đất, chiếm hơn 30% diện tích bề mặt hành tinh.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-5',
-        type: 'multiple_choice',
-        content: 'Trong bảng tuần hoàn hóa học, nguyên tố nào có ký hiệu là "Au"?',
-        options: [
-          { id: 'A', text: 'Bạc' },
-          { id: 'B', text: 'Vàng' },
-          { id: 'C', text: 'Đồng' },
-          { id: 'D', text: 'Nhôm' },
-        ],
-        correctAnswer: 'B',
-        explanation: '"Au" bắt nguồn từ tiếng Latin "Aurum", nghĩa là rạng đông rực rỡ, chính là ký hiệu hóa học của Vàng.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-6',
-        type: 'multiple_choice',
-        content: 'Kim tự tháp Giza nổi tiếng nằm ở quốc gia nào ngày nay?',
-        options: [
-          { id: 'A', text: 'Hy Lạp' },
-          { id: 'B', text: 'Thổ Nhĩ Kỳ' },
-          { id: 'C', text: 'Ai Cập' },
-          { id: 'D', text: 'Jordan' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Đại kim tự tháp Giza là một trong 7 kỳ quan thế giới cổ đại còn nguyên vẹn, tọa lạc tại ngoại ô Cairo, Ai Cập.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-7',
-        type: 'multiple_choice',
-        content: 'Tốc độ ánh sáng trong chân không xấp xỉ bằng bao nhiêu km/s?',
-        options: [
-          { id: 'A', text: '30.000 km/s' },
-          { id: 'B', text: '150.000 km/s' },
-          { id: 'C', text: '300.000 km/s' },
-          { id: 'D', text: '3.000.000 km/s' },
-        ],
-        correctAnswer: 'C',
-        explanation: 'Tốc độ ánh sáng trong chân không chính xác là 299.792.458 m/s, xấp xỉ 300.000 km/giây.',
-        difficulty: 'hard',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-gen-8',
-        type: 'multiple_choice',
-        content: 'Cơ quan nào trong cơ thể con người chịu trách nhiệm lọc máu và sản xuất nước tiểu?',
-        options: [
-          { id: 'A', text: 'Gan' },
-          { id: 'B', text: 'Thận' },
-          { id: 'C', text: 'Phổi' },
-          { id: 'D', text: 'Tụy' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Thận lọc khoảng 120-150 lít máu mỗi ngày để tạo ra khoảng 1-2 lít nước tiểu chứa chất cặn bã.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-    ],
-  },
-  {
-    id: 'quiz-tech-and-coding',
-    title: 'Công Nghệ, Thuật Toán & Lập Trình',
-    description: 'Bộ câu hỏi thử thách tư duy lập trình, cấu trúc dữ liệu, mạng máy tính và phát triển phần mềm.',
-    ownerName: 'Maze Rush Dev Team',
-    createdAt: new Date().toISOString(),
-    questions: [
-      {
-        id: 'q-tech-1',
-        type: 'multiple_choice',
-        content: 'Thuật toán tìm kiếm theo chiều rộng (BFS) thường sử dụng cấu trúc dữ liệu nào?',
-        options: [
-          { id: 'A', text: 'Stack (Ngăn xếp)' },
-          { id: 'B', text: 'Queue (Hàng đợi)' },
-          { id: 'C', text: 'Binary Tree (Cây nhị phân)' },
-          { id: 'D', text: 'Priority Queue' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'BFS duyệt đồ thị theo từng tầng mức và sử dụng Queue (FIFO) để quản lý thứ tự các đỉnh cần duyệt.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-tech-2',
-        type: 'multiple_choice',
-        content: 'Giao thức nào cho phép truyền dữ liệu hai chiều full-duplex thời gian thực qua một kết nối TCP duy nhất?',
-        options: [
-          { id: 'A', text: 'HTTP/1.1 polling' },
-          { id: 'B', text: 'WebSocket' },
-          { id: 'C', text: 'FTP' },
-          { id: 'D', text: 'SMTP' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'WebSocket cung cấp kênh truyền dữ liệu hai chiều liên tục với độ trễ tối thiểu, rất phù hợp cho game multiplayer.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-tech-3',
-        type: 'multiple_choice',
-        content: 'Độ phức tạp thời gian trung bình của thuật toán QuickSort là gì?',
-        options: [
-          { id: 'A', text: 'O(n)' },
-          { id: 'B', text: 'O(n log n)' },
-          { id: 'C', text: 'O(n^2)' },
-          { id: 'D', text: 'O(log n)' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'QuickSort có thời gian chạy trung bình là O(n log n) nhờ kỹ thuật chia để trị (Divide and Conquer).',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-tech-4',
-        type: 'multiple_choice',
-        content: 'Trong kiến trúc Web hiện đại, JWT là viết tắt của thuật ngữ nào?',
-        options: [
-          { id: 'A', text: 'Java Web Toolkit' },
-          { id: 'B', text: 'JSON Web Token' },
-          { id: 'C', text: 'JavaScript Wire Transfer' },
-          { id: 'D', text: 'Joint Worker Thread' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'JSON Web Token (JWT) là một chuẩn mở (RFC 7519) dùng để truyền thông tin an toàn giữa các bên dưới dạng JSON object.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-tech-5',
-        type: 'multiple_choice',
-        content: 'Trong TypeScript, từ khóa nào dùng để định nghĩa kiểu dữ liệu có thể mở rộng (extend)?',
-        options: [
-          { id: 'A', text: 'interface' },
-          { id: 'B', text: 'enum' },
-          { id: 'C', text: 'module' },
-          { id: 'D', text: 'namespace' },
-        ],
-        correctAnswer: 'A',
-        explanation: '`interface` trong TypeScript hỗ trợ kế thừa bằng từ khóa `extends` và cơ chế declaration merging.',
-        difficulty: 'easy',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-      {
-        id: 'q-tech-6',
-        type: 'multiple_choice',
-        content: 'Trong cơ sở dữ liệu quan hệ, tính chất ACID gồm Atomicity, Consistency, Isolation và...?',
-        options: [
-          { id: 'A', text: 'Dependability' },
-          { id: 'B', text: 'Durability' },
-          { id: 'C', text: 'Distribution' },
-          { id: 'D', text: 'Decoupling' },
-        ],
-        correctAnswer: 'B',
-        explanation: 'Durability (Tính bền vững) đảm bảo sau khi transaction commit, dữ liệu sẽ được lưu an toàn dù hệ thống gặp sự cố.',
-        difficulty: 'medium',
-        timeLimit: 20,
-        rewardType: 'random_power',
-      },
-    ],
+    questions: MR_QANH_QUESTIONS,
   },
 ];

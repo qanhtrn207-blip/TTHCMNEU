@@ -169,7 +169,9 @@ app.get('/api/rooms/:roomId/export-csv', (req: Request, res: Response) => {
     rows.push([
       entry.rank.toString(),
       `"${entry.nickname.replace(/"/g, '""')}"`,
-      entry.isFinished ? 'Đã về đích' : 'Chưa hoàn thành',
+      entry.isFinished
+        ? 'Đã về đích'
+        : `Cách đích ${entry.distanceToFinish ?? 0} ô (${entry.progress}%)`,
       entry.score.toString(),
       entry.correctCount.toString(),
       entry.wrongCount.toString(),

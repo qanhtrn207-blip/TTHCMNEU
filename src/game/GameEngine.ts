@@ -5,6 +5,7 @@ import {
   GameOverPayload,
   GameRoomState,
   LeaderboardEntry,
+  MazeNPC,
   ObstacleGate,
   Player,
   PlayerEffects,
@@ -28,6 +29,7 @@ export class GameEngine {
   private questionsByRoom: Map<string, Map<string, Question>> = new Map();
   private playerMoveCooldowns: Map<string, number> = new Map(); // playerId -> timestamp
   private customQuizSets: Map<string, QuizSet> = new Map();
+  private playerGateStreaks: Map<string, number> = new Map(); // `${roomId}_${playerId}_${gateId}` -> streak
 
   constructor() {
     // Seed preset quiz sets
@@ -90,7 +92,7 @@ export class GameEngine {
       difficulty: settings?.difficulty || 'medium',
       powerUpsEnabled: settings?.powerUpsEnabled ?? true,
       gameMode: settings?.gameMode || 'classic',
-      gameDurationMinutes: settings?.gameDurationMinutes || 0,
+      gameDurationMinutes: settings?.gameDurationMinutes || 5,
       showExplanations: settings?.showExplanations ?? true,
     };
 
@@ -214,7 +216,21 @@ export class GameEngine {
     };
 
     room.players[playerId] = newPlayer;
+    if (room.maze) {
+      this.ensurePlayerGates(room, playerId);
+    }
     return { room, player: newPlayer };
+  }
+
+  public ensurePlayerGates(room: GameRoomState, playerId: string) {
+    if (!room.maze || !room.maze.obstacleGates) return;
+    const hasPlayerGates = room.maze.obstacleGates.some((g) => g.playerId === playerId);
+    if (!hasPlayerGates) {
+      const qMap = this.questionsByRoom.get(room.id);
+      const qIds = qMap ? Array.from(qMap.keys()) : [];
+      const newGates = MazeGenerator.generatePlayerGates(room.maze, playerId, qIds);
+      room.maze.obstacleGates.push(...newGates);
+    }
   }
 
   public handleDisconnect(socketId: string): {
@@ -273,15 +289,22 @@ export class GameEngine {
       };
     }
 
-    // Get question IDs from room question set
+    // Get question IDs from room question set and shuffle randomly
     const questionMap = this.questionsByRoom.get(roomId);
     const questionIds = questionMap ? Array.from(questionMap.keys()) : [];
+    const shuffledQuestionIds = [...questionIds].sort(() => Math.random() - 0.5);
 
-    // Generate maze with authoritative logic
-    const maze = MazeGenerator.generate(room.settings.difficulty, questionIds);
+    // Generate maze with authoritative logic and randomized question distribution
+    const playerIds = Object.keys(room.players);
+    const maze = MazeGenerator.generate(
+      room.settings.difficulty,
+      shuffledQuestionIds,
+      playerIds
+    );
     room.maze = maze;
     room.status = 'PLAYING';
     room.startedAt = Date.now();
+    room.timeRemaining = (room.settings.gameDurationMinutes || 5) * 60;
 
     // Reset all players to start position
     for (const player of Object.values(room.players)) {
@@ -309,6 +332,10 @@ export class GameEngine {
     };
     powerUpCollected?: PowerUpType;
     finished?: boolean;
+    npcCollision?: {
+      npcName: string;
+      durationSeconds: number;
+    };
     reason?: string;
   } {
     const { roomId, playerId, targetX, targetY } = payload;
@@ -324,9 +351,15 @@ export class GameEngine {
 
     const now = Date.now();
 
-    // 1. Check freeze effect
+    // 1. Check freeze / stun effect
     if (player.activeEffects.freezeUntil && player.activeEffects.freezeUntil > now) {
-      return { valid: false, reason: 'Bạn đang bị đóng băng!' };
+      const remainSec = Math.ceil((player.activeEffects.freezeUntil - now) / 1000);
+      const reason = player.activeEffects.stunnedByNpc
+        ? `Bị choáng bởi Vệ Binh Mê Cung! Còn ${remainSec}s`
+        : `Bạn đang bị đóng băng! Còn ${remainSec}s`;
+      return { valid: false, reason };
+    } else {
+      player.activeEffects.stunnedByNpc = false;
     }
 
     // 2. Anti-speed-hack: enforce minimum move cooldown
@@ -368,59 +401,78 @@ export class GameEngine {
       return { valid: false, reason: 'Không thể đi xuyên tường' };
     }
 
-    // 6. Check Obstacle Gate
-    if (targetCell === CellType.OBSTACLE_GATE) {
-      const gate = room.maze.obstacleGates.find(
-        (g) => g.x === targetX && g.y === targetY
-      );
+    // 6. Check Obstacle Gate (Requires 3 consecutive correct answers)
+    // Only gates assigned to this player (or shared gates) will block and trigger questions
+    const gate = room.maze.obstacleGates.find(
+      (g) => g.x === targetX && g.y === targetY && (!g.playerId || g.playerId === playerId)
+    );
 
-      if (gate && !gate.unlockedBy.includes(playerId)) {
-        // Player has not unlocked this gate!
+    if (gate && !gate.unlockedBy.includes(playerId)) {
         player.currentObstacleId = gate.id;
 
+        const streakKey = `${roomId}_${playerId}_${gate.id}`;
+        const currentStreak = this.playerGateStreaks.get(streakKey) || 0;
+
         const qMap = this.questionsByRoom.get(roomId);
-        const question = qMap?.get(gate.questionId);
+        if (qMap) {
+          const qList = Array.from(qMap.values());
+          const baseIdx = qList.findIndex((q) => q.id === gate.questionId);
+          const qIndex = (baseIdx >= 0 ? baseIdx + currentStreak : currentStreak) % qList.length;
+          const question = qList[qIndex];
 
-        if (question) {
-          // Prepare QuestionIssuedPayload (STRIP CORRECT ANSWER)
-          const timeLimit = player.activeEffects.timeAttackActive
-            ? Math.max(5, Math.floor(question.timeLimit / 2))
-            : question.timeLimit;
+          if (question) {
+            const timeLimit = player.activeEffects.timeAttackActive
+              ? Math.max(5, Math.floor(question.timeLimit / 2))
+              : question.timeLimit;
 
-          const questionClean: Omit<Question, 'correctAnswer'> = {
-            id: question.id,
-            type: question.type,
-            content: question.content,
-            options: question.options,
-            difficulty: question.difficulty,
-            timeLimit,
-            rewardType: question.rewardType,
-          };
+            const questionClean: Omit<Question, 'correctAnswer'> = {
+              id: question.id,
+              type: question.type,
+              content: question.content,
+              options: question.options,
+              difficulty: question.difficulty,
+              timeLimit,
+              rewardType: question.rewardType,
+            };
 
-          const questionIssued: QuestionIssuedPayload = {
-            obstacleId: gate.id,
-            question: questionClean,
-            timeLimit,
-            expiresAt: now + timeLimit * 1000,
-          };
-
-          return {
-            valid: false,
-            player,
-            obstacleTriggered: {
+            const questionIssued: QuestionIssuedPayload = {
               obstacleId: gate.id,
-              questionIssued,
-            },
-            reason: 'Gặp chướng ngại vật! Hãy giải câu đố để mở đường.',
-          };
+              question: questionClean,
+              timeLimit,
+              expiresAt: now + timeLimit * 1000,
+              streak: currentStreak,
+              requiredStreak: 3,
+            };
+
+            return {
+              valid: false,
+              player,
+              obstacleTriggered: {
+                obstacleId: gate.id,
+                questionIssued,
+              },
+              reason: `Gặp ô khóa! Cần trả lời đúng 3 câu liên tiếp (Hiện tại: ${currentStreak}/3)!`,
+            };
+          }
         }
       }
-    }
 
     // 7. Move is valid! Update position and cooldown
     player.x = targetX;
     player.y = targetY;
     this.playerMoveCooldowns.set(playerId, now);
+
+    // 7b. Check NPC Collision when stepping onto tile
+    let npcCollision: { npcName: string; durationSeconds: number } | undefined;
+    const hitNpc = room.maze.npcs?.find((n) => n.x === targetX && n.y === targetY);
+    if (hitNpc) {
+      player.activeEffects.freezeUntil = now + 5000;
+      player.activeEffects.stunnedByNpc = true;
+      npcCollision = {
+        npcName: hitNpc.name,
+        durationSeconds: 5,
+      };
+    }
 
     // 8. Update progress
     const shortestPath = MazeGenerator.findShortestPath(
@@ -475,6 +527,7 @@ export class GameEngine {
       player,
       powerUpCollected: collectedPowerUp,
       finished: playerFinished,
+      npcCollision,
     };
   }
 
@@ -494,55 +547,98 @@ export class GameEngine {
     if (!player) return { success: false, error: 'Người chơi không tồn tại' };
 
     const qMap = this.questionsByRoom.get(roomId);
-    const question = qMap?.get(questionId);
+    if (!qMap) return { success: false, error: 'Bộ câu hỏi không tồn tại' };
+
+    const question = qMap.get(questionId);
     if (!question) return { success: false, error: 'Câu hỏi không tồn tại' };
 
     // Reset time attack flag on answer submission
     player.activeEffects.timeAttackActive = false;
 
+    const streakKey = `${roomId}_${playerId}_${obstacleId}`;
+    let currentStreak = this.playerGateStreaks.get(streakKey) || 0;
+
     const isCorrect = question.correctAnswer === selectedOptionId;
     let rewardPowerUp: PowerUpType | undefined;
 
     if (isCorrect) {
+      currentStreak += 1;
       player.correctCount++;
       player.score += 150;
 
-      // Unlock obstacle gate for this player
-      const gate = room.maze.obstacleGates.find((g) => g.id === obstacleId);
-      if (gate && !gate.unlockedBy.includes(playerId)) {
-        gate.unlockedBy.push(playerId);
+      if (currentStreak >= 3) {
+        // Successfully achieved 3 consecutive correct answers! UNLOCK GATE!
+        this.playerGateStreaks.delete(streakKey);
+        const gate = room.maze.obstacleGates.find((g) => g.id === obstacleId);
+        if (gate && !gate.unlockedBy.includes(playerId)) {
+          gate.unlockedBy.push(playerId);
+        }
+
+        delete player.currentObstacleId;
+
+        // Random power-up reward if enabled and space available
+        if (room.settings.powerUpsEnabled && player.inventory.length < 3) {
+          const pool: PowerUpType[] = [
+            'speed_boost',
+            'shield',
+            'reveal_path',
+            'lucky_key',
+            'teleport',
+            'ice_trap',
+          ];
+          rewardPowerUp = pool[Math.floor(Math.random() * pool.length)];
+          player.inventory.push(rewardPowerUp);
+        }
+
+        const result: AnswerResultPayload = {
+          playerId,
+          obstacleId,
+          isCorrect: true,
+          correctAnswer: question.correctAnswer,
+          rewardPowerUp,
+          newProgress: player.progress,
+          streak: 3,
+          requiredStreak: 3,
+          gateUnlocked: true,
+        };
+
+        return { success: true, result, player };
+      } else {
+        // Intermediate streak (1/3 or 2/3) - prepare next question!
+        this.playerGateStreaks.set(streakKey, currentStreak);
+
+        // Randomize the next question in the streak (avoiding duplicate of current question)
+        const qList = Array.from(qMap.values());
+        const candidates = qList.filter((q) => q.id !== questionId);
+        const nextQ = candidates[Math.floor(Math.random() * candidates.length)] || qList[0];
+
+        const nextQuestionClean: Omit<Question, 'correctAnswer'> = {
+          id: nextQ.id,
+          type: nextQ.type,
+          content: nextQ.content,
+          options: nextQ.options,
+          difficulty: nextQ.difficulty,
+          timeLimit: nextQ.timeLimit,
+          rewardType: nextQ.rewardType,
+        };
+
+        const result: AnswerResultPayload = {
+          playerId,
+          obstacleId,
+          isCorrect: true,
+          correctAnswer: question.correctAnswer,
+          newProgress: player.progress,
+          streak: currentStreak,
+          requiredStreak: 3,
+          gateUnlocked: false,
+          nextQuestion: nextQuestionClean,
+        };
+
+        return { success: true, result, player };
       }
-
-      delete player.currentObstacleId;
-
-      // Random power-up reward if enabled and space available
-      if (room.settings.powerUpsEnabled && player.inventory.length < 3) {
-        const pool: PowerUpType[] = [
-          'speed_boost',
-          'shield',
-          'reveal_path',
-          'lucky_key',
-          'teleport',
-          'ice_trap',
-        ];
-        rewardPowerUp = pool[Math.floor(Math.random() * pool.length)];
-        player.inventory.push(rewardPowerUp);
-      }
-
-      const result: AnswerResultPayload = {
-        playerId,
-        obstacleId,
-        isCorrect: true,
-        correctAnswer: question.correctAnswer,
-        explanation: room.settings.showExplanations
-          ? question.explanation
-          : undefined,
-        rewardPowerUp,
-        newProgress: player.progress,
-      };
-
-      return { success: true, result, player };
     } else {
+      // Wrong answer -> streak resets to 0, freeze 3s!
+      this.playerGateStreaks.set(streakKey, 0);
       player.wrongCount++;
       player.score = Math.max(0, player.score - 30);
 
@@ -553,11 +649,13 @@ export class GameEngine {
         playerId,
         obstacleId,
         isCorrect: false,
-        correctAnswer: question.correctAnswer,
-        explanation: room.settings.showExplanations
-          ? question.explanation
-          : undefined,
+        correctAnswer: '', // Never reveal correct answer on wrong submission
+        explanation: undefined, // Never reveal explanation on wrong submission
         penaltySeconds: 3,
+        streak: 0,
+        requiredStreak: 3,
+        gateUnlocked: false,
+        newProgress: player.progress,
       };
 
       return { success: true, result, player };
@@ -756,16 +854,41 @@ export class GameEngine {
     if (!room) return [];
 
     const players = Object.values(room.players);
+    const maze = room.maze;
+
+    // Calculate distanceToFinish for all players (shortest BFS path or Manhattan distance)
+    const playerDistances: Record<string, number> = {};
+    for (const p of players) {
+      if (p.isFinished) {
+        playerDistances[p.id] = 0;
+      } else if (maze) {
+        const path = MazeGenerator.findShortestPath(maze.grid, { x: p.x, y: p.y }, maze.finishPos);
+        if (path && path.length > 0) {
+          playerDistances[p.id] = path.length - 1;
+        } else {
+          playerDistances[p.id] = Math.abs(maze.finishPos.x - p.x) + Math.abs(maze.finishPos.y - p.y);
+        }
+      } else {
+        playerDistances[p.id] = 999;
+      }
+    }
 
     // Sort rule:
     // 1. Finished players first, sorted by finishedAt ascending (earlier finish = better rank)
-    // 2. Unfinished players sorted by progress descending, then score descending, then correctCount descending
+    // 2. Unfinished players sorted by distanceToFinish ascending (closer to finish = better rank!)
+    // 3. If tie: progress descending, then score descending, then correctCount descending
     players.sort((a, b) => {
       if (a.isFinished && b.isFinished) {
         return (a.finishedAt || 0) - (b.finishedAt || 0);
       }
       if (a.isFinished) return -1;
       if (b.isFinished) return 1;
+
+      const distA = playerDistances[a.id] ?? 9999;
+      const distB = playerDistances[b.id] ?? 9999;
+      if (distA !== distB) {
+        return distA - distB;
+      }
 
       if (b.progress !== a.progress) return b.progress - a.progress;
       if (b.score !== a.score) return b.score - a.score;
@@ -776,6 +899,7 @@ export class GameEngine {
       const rank = index + 1;
       let badge: string | undefined;
       if (rank === 1 && p.isFinished) badge = 'Maze Champion 🏆';
+      else if (rank === 1 && !p.isFinished) badge = 'Tiên Phong Gần Đích Nhất 🌟';
       else if (rank === 2 && p.isFinished) badge = 'Master Explorer 🥈';
       else if (rank === 3 && p.isFinished) badge = 'Knowledge Runner 🥉';
       else if (p.correctCount >= 5) badge = 'Scholar 🎓';
@@ -793,9 +917,36 @@ export class GameEngine {
         correctCount: p.correctCount,
         wrongCount: p.wrongCount,
         itemsUsedCount: p.itemsUsedCount,
+        distanceToFinish: playerDistances[p.id],
         badge,
       };
     });
+  }
+
+  public handleGameTimeout(roomId: string): {
+    success: boolean;
+    gameOverPayload?: GameOverPayload;
+  } {
+    const room = this.rooms.get(roomId);
+    if (!room || room.status === 'ENDED') return { success: false };
+
+    room.status = 'ENDED';
+    room.endedAt = Date.now();
+    room.timeRemaining = 0;
+    const leaderboard = this.getLeaderboard(roomId);
+    const totalDurationMs = room.startedAt
+      ? room.endedAt - room.startedAt
+      : 0;
+
+    return {
+      success: true,
+      gameOverPayload: {
+        roomId,
+        leaderboard,
+        totalDurationMs,
+        endedReason: 'timeout',
+      },
+    };
   }
 
   public checkGameCompletion(roomId: string): {
@@ -897,5 +1048,74 @@ export class GameEngine {
         endedReason: 'host_terminated',
       },
     };
+  }
+
+  // --- NPC Tick & Collision AI ---
+  public tickNPCs(roomId: string): {
+    npcs: MazeNPC[];
+    collisions: { playerId: string; npcName: string }[];
+  } {
+    const room = this.rooms.get(roomId);
+    if (!room || !room.maze || !room.maze.npcs || room.status !== 'PLAYING') {
+      return { npcs: [], collisions: [] };
+    }
+
+    const { grid, width, height } = room.maze;
+    const collisions: { playerId: string; npcName: string }[] = [];
+    const now = Date.now();
+
+    room.maze.npcs.forEach((npc) => {
+      const dirs = [
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 },
+      ];
+
+      const validMoves = dirs.filter((d) => {
+        const nx = npc.x + d.dx;
+        const ny = npc.y + d.dy;
+        return (
+          nx > 0 &&
+          nx < width - 1 &&
+          ny > 0 &&
+          ny < height - 1 &&
+          grid[ny][nx] !== CellType.WALL
+        );
+      });
+
+      if (validMoves.length > 0) {
+        // Prefer straight continuation with 65% probability
+        const keepDir = validMoves.find((d) => d.dx === npc.dx && d.dy === npc.dy);
+        let chosen = keepDir && Math.random() < 0.65 ? keepDir : null;
+
+        if (!chosen) {
+          // Avoid 180 degree immediate reversal if alternatives exist
+          const nonReverseMoves = validMoves.filter(
+            (d) => !(d.dx === -npc.dx && d.dy === -npc.dy)
+          );
+          const pool = nonReverseMoves.length > 0 ? nonReverseMoves : validMoves;
+          chosen = pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        npc.x += chosen.dx;
+        npc.y += chosen.dy;
+        npc.dx = chosen.dx;
+        npc.dy = chosen.dy;
+      }
+
+      // Check collision with any active player
+      Object.values(room.players).forEach((p) => {
+        if (!p.isFinished && p.x === npc.x && p.y === npc.y) {
+          if (!p.activeEffects.freezeUntil || p.activeEffects.freezeUntil < now) {
+            p.activeEffects.freezeUntil = now + 5000;
+            p.activeEffects.stunnedByNpc = true;
+            collisions.push({ playerId: p.id, npcName: npc.name });
+          }
+        }
+      });
+    });
+
+    return { npcs: room.maze.npcs, collisions };
   }
 }

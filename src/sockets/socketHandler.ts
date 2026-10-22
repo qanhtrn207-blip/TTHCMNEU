@@ -9,6 +9,85 @@ import {
 import { extractClientIp, isAuthorizedHost } from '../utils/ipCheck.js';
 
 export function registerSocketHandlers(io: Server, engine: GameEngine) {
+  const roomTimers = new Map<string, NodeJS.Timeout>();
+
+  function startRoomCountdown(roomId: string) {
+    if (roomTimers.has(roomId)) {
+      clearInterval(roomTimers.get(roomId)!);
+      roomTimers.delete(roomId);
+    }
+
+    const interval = setInterval(() => {
+      const room = engine.getRoomById(roomId);
+      if (!room || room.status === 'ENDED') {
+        clearInterval(interval);
+        roomTimers.delete(roomId);
+        return;
+      }
+
+      if (room.status === 'PAUSED') {
+        return; // Do not count down while paused by host
+      }
+
+      if (room.status === 'PLAYING') {
+        if (typeof room.timeRemaining !== 'number') {
+          room.timeRemaining = (room.settings.gameDurationMinutes || 5) * 60;
+        }
+
+        room.timeRemaining = Math.max(0, room.timeRemaining - 1);
+
+        io.to(roomId).emit('match-timer-tick', {
+          roomId,
+          timeRemaining: room.timeRemaining,
+        });
+
+        // Tick NPCs & check collisions
+        const npcTick = engine.tickNPCs(roomId);
+        if (npcTick.npcs && npcTick.npcs.length > 0) {
+          io.to(roomId).emit('npc-positions-updated', { npcs: npcTick.npcs });
+        }
+        if (npcTick.collisions && npcTick.collisions.length > 0) {
+          npcTick.collisions.forEach((col) => {
+            const victim = room.players[col.playerId];
+            io.to(roomId).emit('player-stunned', {
+              playerId: col.playerId,
+              npcName: col.npcName,
+              durationSeconds: 5,
+              x: victim?.x,
+              y: victim?.y,
+              message: `🚨 ${victim?.nickname || 'Người chơi'} va phải ${col.npcName}! Bị choáng 5 giây!`,
+            });
+            if (victim) {
+              io.to(roomId).emit('player-position-updated', {
+                playerId: victim.id,
+                x: victim.x,
+                y: victim.y,
+                progress: victim.progress,
+                activeEffects: victim.activeEffects,
+              });
+            }
+          });
+        }
+
+        // Time ran out!
+        if (room.timeRemaining <= 0) {
+          clearInterval(interval);
+          roomTimers.delete(roomId);
+
+          const timeoutRes = engine.handleGameTimeout(roomId);
+          if (timeoutRes.gameOverPayload) {
+            io.to(roomId).emit('game-over', timeoutRes.gameOverPayload);
+            io.to(roomId).emit(
+              'leaderboard-updated',
+              timeoutRes.gameOverPayload.leaderboard
+            );
+          }
+        }
+      }
+    }, 1000);
+
+    roomTimers.set(roomId, interval);
+  }
   io.on('connection', (socket: Socket) => {
     // 1. Create Room (Host IP restriction: Only 192.168.50.117 & localhost)
     socket.on(
@@ -143,6 +222,7 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
           if (callback) callback({ success: true, room: result.room });
           io.to(data.roomId).emit('game-started', result.room);
           io.to(data.roomId).emit('leaderboard-updated', engine.getLeaderboard(data.roomId));
+          startRoomCountdown(data.roomId);
         } else {
           if (callback) callback({ success: false, error: result.error });
           socket.emit('error-message', { message: result.error });
@@ -179,6 +259,18 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
         };
         io.to(payload.roomId).emit('player-position-updated', update);
 
+        // If player collided with NPC
+        if (result.npcCollision) {
+          io.to(payload.roomId).emit('player-stunned', {
+            playerId: result.player.id,
+            npcName: result.npcCollision.npcName,
+            durationSeconds: result.npcCollision.durationSeconds,
+            x: result.player.x,
+            y: result.player.y,
+            message: `🚨 ${result.player.nickname} va phải ${result.npcCollision.npcName}! Bị choáng ${result.npcCollision.durationSeconds} giây!`,
+          });
+        }
+
         // If picked up a powerup
         if (result.powerUpCollected) {
           socket.emit('power-up-collected', {
@@ -197,6 +289,10 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
           // Check if entire game should finish
           const check = engine.checkGameCompletion(payload.roomId);
           if (check.completed && check.gameOverPayload) {
+            if (roomTimers.has(payload.roomId)) {
+              clearInterval(roomTimers.get(payload.roomId)!);
+              roomTimers.delete(payload.roomId);
+            }
             io.to(payload.roomId).emit('game-over', check.gameOverPayload);
           } else {
             io.to(payload.roomId).emit(
@@ -220,13 +316,24 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
       socket.emit('answer-result', result.result);
 
       if (result.result.isCorrect) {
-        // Inform all that this obstacle gate is unlocked for this player
-        io.to(payload.roomId).emit('obstacle-unlocked', {
-          obstacleId: payload.obstacleId,
-          playerId: payload.playerId,
-        });
+        if (result.result.gateUnlocked) {
+          // Inform all that this obstacle gate is unlocked for this player
+          io.to(payload.roomId).emit('obstacle-unlocked', {
+            obstacleId: payload.obstacleId,
+            playerId: payload.playerId,
+          });
+        }
 
         // Broadcast position update with new progress
+        io.to(payload.roomId).emit('player-position-updated', {
+          playerId: result.player.id,
+          x: result.player.x,
+          y: result.player.y,
+          progress: result.player.progress,
+          activeEffects: result.player.activeEffects,
+        });
+      } else {
+        // Broadcast penalty freeze state
         io.to(payload.roomId).emit('player-position-updated', {
           playerId: result.player.id,
           x: result.player.x,
@@ -308,9 +415,29 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
 
     // 10. End Game (Host)
     socket.on('end-game', (data: { roomId: string }) => {
+      if (roomTimers.has(data.roomId)) {
+        clearInterval(roomTimers.get(data.roomId)!);
+        roomTimers.delete(data.roomId);
+      }
       const res = engine.endGame(data.roomId, socket.id);
       if (res.success && res.gameOverPayload) {
         io.to(data.roomId).emit('game-over', res.gameOverPayload);
+      }
+    });
+
+    // 10.1 Trigger Timeout (When time limit reached)
+    socket.on('trigger-timeout', (data: { roomId: string }) => {
+      if (roomTimers.has(data.roomId)) {
+        clearInterval(roomTimers.get(data.roomId)!);
+        roomTimers.delete(data.roomId);
+      }
+      const res = engine.handleGameTimeout(data.roomId);
+      if (res.success && res.gameOverPayload) {
+        io.to(data.roomId).emit('game-over', res.gameOverPayload);
+        io.to(data.roomId).emit(
+          'leaderboard-updated',
+          res.gameOverPayload.leaderboard
+        );
       }
     });
 

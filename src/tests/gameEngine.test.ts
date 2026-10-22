@@ -6,8 +6,8 @@ import { CellType } from '../types/game.js';
 
 test('1. Maze Generator creates solvable maze with walls and paths', () => {
   const maze = MazeGenerator.generate('easy', ['q1', 'q2', 'q3']);
-  assert.equal(maze.width, 15);
-  assert.equal(maze.height, 15);
+  assert.equal(maze.width, 37);
+  assert.equal(maze.height, 37);
   assert.equal(maze.grid[maze.startPos.y][maze.startPos.x], CellType.START_TILE);
   assert.equal(maze.grid[maze.finishPos.y][maze.finishPos.x], CellType.FINISH_GATE);
 
@@ -123,13 +123,17 @@ test('6. Quiz Obstacle Gate and Answer validation', () => {
   const hostPlayer = Object.values(room.players)[0];
   const gate = room.maze!.obstacleGates[0];
 
+  const qSet = engine.getQuizSetById('quiz-general-knowledge');
+  const q = qSet?.questions.find((item) => item.id === gate.questionId);
+  const correctOption = q?.correctAnswer || 'B';
+
   // Submit correct answer
   const correctRes = engine.submitAnswer({
     roomId: room.id,
     playerId: hostPlayer.id,
     obstacleId: gate.id,
     questionId: gate.questionId,
-    selectedOptionId: 'B', // Let's check against actual question
+    selectedOptionId: correctOption,
     responseTimeMs: 2000,
   });
 
@@ -148,6 +152,7 @@ test('6. Quiz Obstacle Gate and Answer validation', () => {
 
   assert.ok(wrongRes.success);
   assert.equal(wrongRes.result?.isCorrect, false);
+  assert.equal(wrongRes.result?.correctAnswer, '', 'Do not reveal correct answer on wrong submission');
   assert.equal(hostPlayer.wrongCount, 1);
   assert.ok(hostPlayer.activeEffects.freezeUntil! > Date.now(), 'Wrong answer applies penalty freeze');
 });
@@ -231,4 +236,167 @@ test('9. Host IP restriction allows only 192.168.50.117 & localhost or PIN', asy
   assert.equal(withPasscode.allowed, true, 'Valid host passcode must grant access');
   assert.equal(isAuthorizedHost('192.168.50.45', 'wrong_pass').allowed, false, 'Wrong passcode must be rejected');
 });
+
+test('10. Match countdown timer and distance-to-finish ranking on timeout', () => {
+  const engine = new GameEngine();
+  const room = engine.createRoom('Host', 's_host', 'Timer Test Room', 'quiz-tthcm-cach-mang-mau', {
+    gameDurationMinutes: 3,
+  });
+
+  const p1 = engine.joinRoom(room.code, 'Player Near Finish', 'fox', 's_near').player!;
+  const p2 = engine.joinRoom(room.code, 'Player Far Finish', 'bear', 's_far').player!;
+
+  const startRes = engine.startGame(room.id, 's_host');
+  assert.ok(startRes.success);
+  assert.equal(room.timeRemaining, 180, 'Time remaining should be 3 minutes = 180 seconds');
+
+  // Place player 1 near finish
+  p1.x = room.maze!.finishPos.x;
+  p1.y = room.maze!.finishPos.y - 1; // 1 step from finish
+
+  // Place player 2 far from finish
+  p2.x = room.maze!.startPos.x;
+  p2.y = room.maze!.startPos.y;
+
+  // Check leaderboard ranking
+  const lb1 = engine.getLeaderboard(room.id);
+  const rankP1 = lb1.find((e) => e.playerId === p1.id)!;
+  const rankP2 = lb1.find((e) => e.playerId === p2.id)!;
+
+  assert.ok(rankP1.distanceToFinish! < rankP2.distanceToFinish!, 'P1 should be closer to finish');
+  assert.ok(rankP1.rank < rankP2.rank, 'P1 should have better rank than P2 because P1 is closer to finish');
+
+  // Trigger game timeout
+  const timeoutRes = engine.handleGameTimeout(room.id);
+  assert.ok(timeoutRes.success);
+  assert.equal(timeoutRes.gameOverPayload?.endedReason, 'timeout');
+  assert.equal(timeoutRes.gameOverPayload?.leaderboard[0].playerId, p1.id, 'P1 closest to finish should win rank 1 on timeout');
+});
+
+test('11. 3 Consecutive Correct Answers per Gate & Patrolling NPCs with 5s Stun', () => {
+  const engine = new GameEngine();
+  const room = engine.createRoom('Host', 's_host', 'Mega Room', 'quiz-mr-qanh-business', {
+    gameMode: 'practice',
+    difficulty: 'medium',
+  });
+  engine.startGame(room.id, 's_host');
+  assert.ok(room.maze!.obstacleGates.length >= 35, 'Medium maze must have plentiful gates (>= 35)');
+  assert.ok(room.maze!.npcs && room.maze!.npcs.length >= 6, 'Maze must have wandering NPCs');
+
+  const hostPlayer = Object.values(room.players)[0];
+  const gate = room.maze!.obstacleGates[0];
+
+  const qSet = engine.getQuizSetById('quiz-mr-qanh-business');
+  const q1 = qSet?.questions.find((q) => q.id === gate.questionId);
+  const correctAns1 = q1?.correctAnswer || 'B';
+
+  // 1st correct answer -> streak: 1, gate not unlocked
+  const ans1 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: correctAns1,
+    responseTimeMs: 1500,
+  });
+  assert.equal(ans1.result?.streak, 1);
+  assert.equal(ans1.result?.gateUnlocked, false);
+  assert.ok(!gate.unlockedBy.includes(hostPlayer.id), 'Gate should not unlock after 1 answer');
+
+  // Submit wrong answer -> resets streak to 0
+  const wrongAns = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: 'WRONG_ID',
+    responseTimeMs: 1500,
+  });
+  assert.equal(wrongAns.result?.streak, 0);
+  assert.equal(wrongAns.result?.gateUnlocked, false);
+
+  // Clear freeze for test
+  hostPlayer.activeEffects.freezeUntil = 0;
+
+  // Streak 1/3
+  const a1 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: correctAns1,
+    responseTimeMs: 1200,
+  });
+  assert.equal(a1.result?.streak, 1);
+  assert.equal(a1.result?.gateUnlocked, false);
+
+  // Streak 2/3
+  const q2Id = a1.result?.nextQuestion?.id || gate.questionId;
+  const q2 = qSet?.questions.find((q) => q.id === q2Id);
+  const correctAns2 = q2?.correctAnswer || 'A';
+  const a2 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: q2Id,
+    selectedOptionId: correctAns2,
+    responseTimeMs: 1200,
+  });
+  assert.equal(a2.result?.streak, 2);
+
+  // Test NPC tick & collision stun (5s)
+  const npc = room.maze!.npcs![0];
+  hostPlayer.x = npc.x;
+  hostPlayer.y = npc.y;
+  hostPlayer.activeEffects.freezeUntil = 0;
+
+  const tickRes = engine.tickNPCs(room.id);
+  assert.ok(tickRes.npcs.length > 0);
+  // If player collided or moves into NPC
+  const moveIntoNpc = engine.handlePlayerMove({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    targetX: npc.x,
+    targetY: npc.y,
+    clientTime: Date.now(),
+  });
+  // Player stunned 5s check
+  assert.ok(hostPlayer.activeEffects.freezeUntil! >= Date.now() + 4500, 'Va chạm NPC áp dụng choáng 5 giây');
+  assert.equal(hostPlayer.activeEffects.stunnedByNpc, true);
+});
+
+test('12. Per-player gates (at least 8 gates along critical path per player) & 12 patrolling NPCs', () => {
+  const engine = new GameEngine();
+  const room = engine.createRoom('Host', 's_host', 'Multiplayer Test', 'quiz-mr-qanh-business', {
+    gameMode: 'classic',
+    difficulty: 'medium',
+  });
+  const p2 = engine.joinRoom(room.code, 'Player2', 'rabbit', 's_p2').player!;
+  const startRes = engine.startGame(room.id, 's_host');
+  assert.ok(startRes.success);
+  assert.ok(room.maze);
+
+  // 12 NPCs verified
+  assert.equal(room.maze.npcs?.length, 12, 'Must have exactly 12 patrolling NPCs');
+
+  const p1 = Object.values(room.players).find((p) => p.isHost)!;
+  const p1Gates = room.maze.obstacleGates.filter((g) => g.playerId === p1.id);
+  const p2Gates = room.maze.obstacleGates.filter((g) => g.playerId === p2.id);
+
+  assert.ok(p1Gates.length >= 8, 'Player 1 must have at least 8 obstacle gates');
+  assert.ok(p2Gates.length >= 8, 'Player 2 must have at least 8 obstacle gates');
+
+  // Verify Player 2 does not hit Player 1 gate
+  const p1Gate = p1Gates[0];
+  const p2Move = engine.handlePlayerMove({
+    roomId: room.id,
+    playerId: p2.id,
+    targetX: p1Gate.x,
+    targetY: p1Gate.y,
+    clientTime: Date.now(),
+  });
+  // Should not trigger obstacle for Player 2
+  assert.equal(p2Move.obstacleTriggered, undefined, 'Player 2 should not trigger Player 1 gate');
+});
+
 

@@ -142,6 +142,7 @@ export interface PlayerEffects {
   speedUntil?: number;
   shieldActive?: boolean;
   timeAttackActive?: boolean;
+  stunnedByNpc?: boolean;
 }
 
 export interface Player {
@@ -167,12 +168,25 @@ export interface Player {
   connected: boolean;
 }
 
+export interface MazeNPC {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  type: 'guard' | 'patrol';
+  icon: string;
+  color: string;
+  dx: number;
+  dy: number;
+}
+
 export interface ObstacleGate {
   id: string;
   x: number;
   y: number;
   questionId: string;
   unlockedBy: string[];
+  playerId?: string;
 }
 
 export interface PowerUpSpawn {
@@ -191,6 +205,7 @@ export interface MazeData {
   finishPos: { x: number; y: number };
   obstacleGates: ObstacleGate[];
   powerUpSpawns: PowerUpSpawn[];
+  npcs?: MazeNPC[];
   shortestPathLength?: number;
 }
 
@@ -223,6 +238,7 @@ export interface GameRoomState {
   endedAt?: number;
   pausedAt?: number;
   pauseRemainingMs?: number;
+  timeRemaining?: number;
 }
 
 export interface ClientMovePayload {
@@ -246,6 +262,8 @@ export interface QuestionIssuedPayload {
   question: Omit<Question, 'correctAnswer'>;
   timeLimit: number;
   expiresAt: number;
+  streak?: number;
+  requiredStreak?: number;
 }
 
 export interface SubmitAnswerPayload {
@@ -266,6 +284,19 @@ export interface AnswerResultPayload {
   rewardPowerUp?: PowerUpType;
   penaltySeconds?: number;
   newProgress?: number;
+  streak?: number;
+  requiredStreak?: number;
+  gateUnlocked?: boolean;
+  nextQuestion?: Omit<Question, 'correctAnswer'>;
+}
+
+export interface PlayerStunnedPayload {
+  playerId: string;
+  npcName: string;
+  durationSeconds: number;
+  x: number;
+  y: number;
+  message: string;
 }
 
 export interface UsePowerUpPayload {
@@ -297,6 +328,7 @@ export interface LeaderboardEntry {
   correctCount: number;
   wrongCount: number;
   itemsUsedCount: number;
+  distanceToFinish?: number;
   badge?: string;
 }
 
