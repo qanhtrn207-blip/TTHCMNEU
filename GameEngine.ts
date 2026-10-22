@@ -554,10 +554,8 @@ export class GameEngine {
         playerId,
         obstacleId,
         isCorrect: false,
-        correctAnswer: question.correctAnswer,
-        explanation: room.settings.showExplanations
-          ? question.explanation
-          : undefined,
+        correctAnswer: '', // Never reveal correct answer on wrong submission
+        explanation: undefined, // Never reveal explanation on wrong submission
         penaltySeconds: 3,
       };
 
