@@ -41,6 +41,34 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
           timeRemaining: room.timeRemaining,
         });
 
+        // Tick NPCs & check collisions
+        const npcTick = engine.tickNPCs(roomId);
+        if (npcTick.npcs && npcTick.npcs.length > 0) {
+          io.to(roomId).emit('npc-positions-updated', { npcs: npcTick.npcs });
+        }
+        if (npcTick.collisions && npcTick.collisions.length > 0) {
+          npcTick.collisions.forEach((col) => {
+            const victim = room.players[col.playerId];
+            io.to(roomId).emit('player-stunned', {
+              playerId: col.playerId,
+              npcName: col.npcName,
+              durationSeconds: 5,
+              x: victim?.x,
+              y: victim?.y,
+              message: `🚨 ${victim?.nickname || 'Người chơi'} va phải ${col.npcName}! Bị choáng 5 giây!`,
+            });
+            if (victim) {
+              io.to(roomId).emit('player-position-updated', {
+                playerId: victim.id,
+                x: victim.x,
+                y: victim.y,
+                progress: victim.progress,
+                activeEffects: victim.activeEffects,
+              });
+            }
+          });
+        }
+
         // Time ran out!
         if (room.timeRemaining <= 0) {
           clearInterval(interval);
@@ -231,6 +259,18 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
         };
         io.to(payload.roomId).emit('player-position-updated', update);
 
+        // If player collided with NPC
+        if (result.npcCollision) {
+          io.to(payload.roomId).emit('player-stunned', {
+            playerId: result.player.id,
+            npcName: result.npcCollision.npcName,
+            durationSeconds: result.npcCollision.durationSeconds,
+            x: result.player.x,
+            y: result.player.y,
+            message: `🚨 ${result.player.nickname} va phải ${result.npcCollision.npcName}! Bị choáng ${result.npcCollision.durationSeconds} giây!`,
+          });
+        }
+
         // If picked up a powerup
         if (result.powerUpCollected) {
           socket.emit('power-up-collected', {
@@ -276,13 +316,24 @@ export function registerSocketHandlers(io: Server, engine: GameEngine) {
       socket.emit('answer-result', result.result);
 
       if (result.result.isCorrect) {
-        // Inform all that this obstacle gate is unlocked for this player
-        io.to(payload.roomId).emit('obstacle-unlocked', {
-          obstacleId: payload.obstacleId,
-          playerId: payload.playerId,
-        });
+        if (result.result.gateUnlocked) {
+          // Inform all that this obstacle gate is unlocked for this player
+          io.to(payload.roomId).emit('obstacle-unlocked', {
+            obstacleId: payload.obstacleId,
+            playerId: payload.playerId,
+          });
+        }
 
         // Broadcast position update with new progress
+        io.to(payload.roomId).emit('player-position-updated', {
+          playerId: result.player.id,
+          x: result.player.x,
+          y: result.player.y,
+          progress: result.player.progress,
+          activeEffects: result.player.activeEffects,
+        });
+      } else {
+        // Broadcast penalty freeze state
         io.to(payload.roomId).emit('player-position-updated', {
           playerId: result.player.id,
           x: result.player.x,

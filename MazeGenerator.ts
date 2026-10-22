@@ -2,6 +2,7 @@ import {
   CellType,
   MazeData,
   MazeDifficulty,
+  MazeNPC,
   ObstacleGate,
   PowerUpSpawn,
   PowerUpType,
@@ -21,22 +22,28 @@ export class MazeGenerator {
     questionIds: string[]
   ): MazeData {
     // Ultra-challenging, large maze configurations:
-    // Guarantees players must answer AT LEAST 25 questions on the critical path to finish!
+    // Plentiful obstacle gates across main paths and branches + patrolling NPCs!
     let width = 37;
     let height = 37;
-    let gateCount = 25;
+    let mainGateCount = 28;
+    let sideGateCount = 12;
     let powerUpCount = 10;
+    let npcCount = 6;
 
     if (difficulty === 'medium') {
       width = 43;
       height = 43;
-      gateCount = 26;
+      mainGateCount = 35;
+      sideGateCount = 18;
       powerUpCount = 12;
+      npcCount = 8;
     } else if (difficulty === 'hard') {
       width = 49;
       height = 49;
-      gateCount = 28;
+      mainGateCount = 42;
+      sideGateCount = 24;
       powerUpCount = 14;
+      npcCount = 10;
     }
 
     // Ensure odd dimensions for proper wall-corridor grid
@@ -112,8 +119,7 @@ export class MazeGenerator {
       ? shortestPath.slice(1, shortestPath.length - 1)
       : [];
 
-    // 5. Strategically place Obstacle Gates along the critical path
-    // Because no bypass loops are created, players MUST unlock all gates to finish!
+    // 5. Place Obstacle Gates along the critical path (Mandatory Checkpoints)
     const obstacleGates: ObstacleGate[] = [];
     const availableQuestionIds = [...questionIds];
     const getNextQuestionId = (idx: number) => {
@@ -121,13 +127,13 @@ export class MazeGenerator {
       return availableQuestionIds[idx % availableQuestionIds.length];
     };
 
-    const targetGates = Math.min(gateCount, pathPoints.length);
+    const targetMainGates = Math.min(mainGateCount, pathPoints.length);
     const usedGateCoords = new Set<string>();
 
-    if (pathPoints.length >= targetGates && targetGates > 0) {
-      const step = pathPoints.length / (targetGates + 1);
+    if (pathPoints.length >= targetMainGates && targetMainGates > 0) {
+      const step = pathPoints.length / (targetMainGates + 1);
 
-      for (let i = 1; i <= targetGates; i++) {
+      for (let i = 1; i <= targetMainGates; i++) {
         let ptIndex = Math.min(Math.round(i * step), pathPoints.length - 1);
         while (ptIndex > 0 && usedGateCoords.has(`${pathPoints[ptIndex].x},${pathPoints[ptIndex].y}`)) {
           ptIndex--;
@@ -152,7 +158,38 @@ export class MazeGenerator {
       }
     }
 
-    // 7. Place PowerUp mystery boxes in alcoves and side corridors
+    // 6. Plentiful Gates on Side Corridors & Branching Intersections
+    const branchCandidates: Point[] = [];
+    for (let y = 1; y < height - 1; y++) {
+      for (let x = 1; x < width - 1; x++) {
+        if (
+          grid[y][x] === CellType.PATH &&
+          !usedGateCoords.has(`${x},${y}`) &&
+          (x !== startPos.x || y !== startPos.y) &&
+          (x !== finishPos.x || y !== finishPos.y)
+        ) {
+          branchCandidates.push({ x, y });
+        }
+      }
+    }
+
+    branchCandidates.sort(() => Math.random() - 0.5);
+    const sideGatesToPlace = Math.min(sideGateCount, branchCandidates.length);
+
+    for (let i = 0; i < sideGatesToPlace; i++) {
+      const pt = branchCandidates[i];
+      usedGateCoords.add(`${pt.x},${pt.y}`);
+      grid[pt.y][pt.x] = CellType.OBSTACLE_GATE;
+      obstacleGates.push({
+        id: `gate_${obstacleGates.length + 1}`,
+        x: pt.x,
+        y: pt.y,
+        questionId: getNextQuestionId(obstacleGates.length),
+        unlockedBy: [],
+      });
+    }
+
+    // 7. Place PowerUp mystery boxes in remaining corridors
     const powerUpTypes: PowerUpType[] = [
       'ice_trap',
       'speed_boost',
@@ -165,25 +202,8 @@ export class MazeGenerator {
     ];
 
     const powerUpSpawns: PowerUpSpawn[] = [];
-    const gatePositions = new Set(obstacleGates.map((g) => `${g.x},${g.y}`));
-    const emptyCorridors: Point[] = [];
-
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        if (
-          grid[y][x] === CellType.PATH &&
-          !gatePositions.has(`${x},${y}`) &&
-          (x !== startPos.x || y !== startPos.y) &&
-          (x !== finishPos.x || y !== finishPos.y)
-        ) {
-          emptyCorridors.push({ x, y });
-        }
-      }
-    }
-
-    // Shuffle and pick power up spawn points
-    emptyCorridors.sort(() => Math.random() - 0.5);
-    const selectedCorridors = emptyCorridors.slice(0, powerUpCount);
+    const remainingForPowerUps = branchCandidates.slice(sideGatesToPlace);
+    const selectedCorridors = remainingForPowerUps.slice(0, powerUpCount);
 
     selectedCorridors.forEach((pt, idx) => {
       const pType = powerUpTypes[idx % powerUpTypes.length];
@@ -197,6 +217,42 @@ export class MazeGenerator {
       });
     });
 
+    // 8. Spawn Wandering NPCs (Vệ Binh Tuần Tra)
+    const npcTiles = remainingForPowerUps
+      .slice(powerUpCount)
+      .filter((pt) => Math.abs(pt.x - startPos.x) + Math.abs(pt.y - startPos.y) > 6);
+
+    const npcNames = [
+      'Vệ Binh Bóng Đêm',
+      'Robot Tuần Tra X-1',
+      'Cảnh Vệ Mê Cung',
+      'Bóng Ma Tri Thức',
+      'Kẻ Săn Đuổi Cyber',
+      'Người Gác Cổng Cổ Xưa',
+      'Tuần Tra Tinh Anh Alpha',
+      'Người Máy Sentinel',
+      'Bóng Ma Lạc Lối',
+      'Hiệp Sĩ Mê Cung',
+    ];
+    const npcIcons = ['🤖', '👾', '👻', '👺', '🦇', '👹', '💀', '🛸'];
+    const npcColors = ['#ef4444', '#f97316', '#a855f7', '#ec4899', '#06b6d4'];
+
+    const npcs: MazeNPC[] = [];
+    for (let i = 0; i < Math.min(npcCount, npcTiles.length); i++) {
+      const pt = npcTiles[i];
+      npcs.push({
+        id: `npc_${i + 1}`,
+        name: npcNames[i % npcNames.length],
+        x: pt.x,
+        y: pt.y,
+        type: 'patrol',
+        icon: npcIcons[i % npcIcons.length],
+        color: npcColors[i % npcColors.length],
+        dx: i % 2 === 0 ? 1 : 0,
+        dy: i % 2 === 0 ? 0 : 1,
+      });
+    }
+
     return {
       width,
       height,
@@ -205,6 +261,7 @@ export class MazeGenerator {
       finishPos,
       obstacleGates,
       powerUpSpawns,
+      npcs,
       shortestPathLength: shortestPath ? shortestPath.length : width + height,
     };
   }

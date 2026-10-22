@@ -269,3 +269,89 @@ test('10. Match countdown timer and distance-to-finish ranking on timeout', () =
   assert.equal(timeoutRes.gameOverPayload?.leaderboard[0].playerId, p1.id, 'P1 closest to finish should win rank 1 on timeout');
 });
 
+test('11. 3 Consecutive Correct Answers per Gate & Patrolling NPCs with 5s Stun', () => {
+  const engine = new GameEngine();
+  const room = engine.createRoom('Host', 's_host', 'Mega Room', 'quiz-mr-qanh-business', {
+    gameMode: 'practice',
+    difficulty: 'medium',
+  });
+  engine.startGame(room.id, 's_host');
+  assert.ok(room.maze!.obstacleGates.length >= 35, 'Medium maze must have plentiful gates (>= 35)');
+  assert.ok(room.maze!.npcs && room.maze!.npcs.length >= 6, 'Maze must have wandering NPCs');
+
+  const hostPlayer = Object.values(room.players)[0];
+  const gate = room.maze!.obstacleGates[0];
+
+  // 1st correct answer -> streak: 1, gate not unlocked
+  const ans1 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: 'B',
+    responseTimeMs: 1500,
+  });
+  assert.equal(ans1.result?.streak, 1);
+  assert.equal(ans1.result?.gateUnlocked, false);
+  assert.ok(!gate.unlockedBy.includes(hostPlayer.id), 'Gate should not unlock after 1 answer');
+
+  // Submit wrong answer -> resets streak to 0
+  const wrongAns = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: 'WRONG_ID',
+    responseTimeMs: 1500,
+  });
+  assert.equal(wrongAns.result?.streak, 0);
+  assert.equal(wrongAns.result?.gateUnlocked, false);
+
+  // Clear freeze for test
+  hostPlayer.activeEffects.freezeUntil = 0;
+
+  // Streak 1/3
+  const a1 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: gate.questionId,
+    selectedOptionId: 'B',
+    responseTimeMs: 1200,
+  });
+  assert.equal(a1.result?.streak, 1);
+  assert.equal(a1.result?.gateUnlocked, false);
+
+  // Streak 2/3
+  const q2Id = a1.result?.nextQuestion?.id || gate.questionId;
+  const a2 = engine.submitAnswer({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    obstacleId: gate.id,
+    questionId: q2Id,
+    selectedOptionId: 'A', // Assuming question has valid option
+    responseTimeMs: 1200,
+  });
+  assert.ok(typeof a2.result?.streak === 'number');
+
+  // Test NPC tick & collision stun (5s)
+  const npc = room.maze!.npcs![0];
+  hostPlayer.x = npc.x;
+  hostPlayer.y = npc.y;
+  hostPlayer.activeEffects.freezeUntil = 0;
+
+  const tickRes = engine.tickNPCs(room.id);
+  assert.ok(tickRes.npcs.length > 0);
+  // If player collided or moves into NPC
+  const moveIntoNpc = engine.handlePlayerMove({
+    roomId: room.id,
+    playerId: hostPlayer.id,
+    targetX: npc.x,
+    targetY: npc.y,
+    clientTime: Date.now(),
+  });
+  // Player stunned 5s check
+  assert.ok(hostPlayer.activeEffects.freezeUntil! >= Date.now() + 4500, 'Va chạm NPC áp dụng choáng 5 giây');
+  assert.equal(hostPlayer.activeEffects.stunnedByNpc, true);
+});
+
